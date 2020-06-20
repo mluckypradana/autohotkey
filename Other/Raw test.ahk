@@ -1,0 +1,3 @@
+﻿~q::
+	send {click}
+	return

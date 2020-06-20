@@ -1,0 +1,3 @@
+﻿#z::
+	Send abcdefghijklmn
+Return

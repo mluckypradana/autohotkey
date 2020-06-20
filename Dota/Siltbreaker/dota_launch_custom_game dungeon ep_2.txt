@@ -1,0 +1,134 @@
+dota_launch_custom_game dungeon ep_1
+
+1. Treant
+2. Legion
+3. Sven
+4. Templar
+5. Zeus
+6. Leshrac
+7. Gyro
+8. Dragon Knight
+9. Omni
+10. Dazzle
+11. Witch doctor
+12. Drow
+13. Weaver
+14. Windranger
+
+Cardin = 750HP, 750Mana, 33% damage returned
+Rhyzik Eye = 300HP, 165Mana, 15% Bonus Damage, 15% Damage Reduction
+2750 - 400*3 = 2750-1200 = 1550
+2000 - 400*3 = 2000-1020 = 980
+
+--------------
+desolator, violet blade, Caustic 	| Trident
+eye, cardin, Daedalus 				| Guardian shell
+
+Troll
+-----------
+Tread, Crystalis, Madness, Bloodthorn, Moonshard, Satanic, Butterfly
+-------------------------------
+Slipper, Bloodthorn, Satanic
+Eye, Cardin, (Butterfly, Shell, Icon, Cautic)
+
+Tanker
+----------
+Satanic
+Cardin
+Eye
+Shell
+Glimmerdark Shield
+Icon
+
+Hitter
+-------
+MKB	
+satanic 	| 		Desolator
+Caustic
+Eye
+Cardin
+shell 		|		Daedalus		|		Violet
+
+Caster
+-------
+Guaridan Greaves
+aghanim 			| 		Bloodstone
+Octarine
+Eye
+Cardin
+Shell
+
+Coin rate
+--------------------------------
+Frostbite tundra 			= 10
+Lake			 			= 20	30
+Wyvern			 			= 25	55
+Frozen Crag					= 30	85
+Tiny						= 35	120
+Excile						= 40	160
+Reef's Edge					= 45	205
+Amoba						= 50	255
+Razor						= 55	310
+Silt						= 100
+--------------------------------
+Average won					= 300
+Slit won					= 400
+
+Creed						= 10
+Locket						= 15
+Paw							= 25
+Pelt						= 30
+Totem						= 30
+Bear						= 30
+Longclaw					= 35
+Ambient						= 35
+Embrace						= 35
+Balric						= 40
+Ice Dragon					= 40
+Cudgel						= 45
+Egg							= 45
+Lifestone					= 50
+Foot						= 55
+Femur						= 50
+Coat						= 60
+Skull						= 60
+Pendant						= 65
+Archanid					= 65
+Violet						= 70
+Shell						= 70
+Amorphotic					= 75
+Icon						= 75
+Gaze						= 80
+Tread						= 90		Not Available
+Wand 						= 110		Not Available
+Slipper 					= 130	
+Cardin						= 130
+Eye 						= 150
+Shield						= 160
+Finale						= 170
+Trident						= 190		Not Available
+
+
+Artifact combos
+Mandatory					= Creed + Cardin (140)
+160 left 					  (Average won 300)
+----------------------------------------------
+Finale						= 170 - Creed			If has icon
+Eye 						= 150					Durable hitter
+Slipper+Totem/Locket		= 130+30				For Icon+Caustic friend
+Violet+shell/icon+Locket 	= 70+70/75
+Amorph+Shell+Locket			= 75+70+15				For tanker
+
+Cudgel+Shell+(Locket+Bear)	= 45+70+30				For troll
+Cudgel+Icon+Totem/Locket	= 45+70+30				For troll support
+
+Femur+Shell/icon+Locket 	= 50+75					Caster
+Femur+Wand					= 50+110				Caster+Healer
+
+
+Femur+Creed+Caldin+Shell 	= 50+10+130 = 265
+Femur+Creed+Eye 			= 50+10+130 = 210
+Femur+Creed+Eye 			= 50+10+130 = 210
+
+Commendation submitted: Thank you for helping to improve the Dota 2 community.
+Report submitted: Thank you for helping to improve the Dota 2 community.

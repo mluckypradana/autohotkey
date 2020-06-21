@@ -1,2 +1,2 @@
 # Autohotkey Collection
-Optimize keyboard function by using autohotkey shortcuts
+Optimize keyboard function using autohotkey shortcuts

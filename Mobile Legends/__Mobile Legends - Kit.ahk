@@ -236,10 +236,25 @@ Return
 
 ;Mute
 !m::
-	click(884, 405)
-	click(884, 482)
-	click(884, 567)
-	
+	click(956, 18)
+	Sleep 200
+	;Mute chat team (Second row first)
+	clickWhen(875, 478, 0x5BC3CB, 0, 0)
+	clickWhen(1024, 479, 0x5BC6CE, 0, 0)
+
+	clickWhen(877, 398, 0x5BC6CF, 0, 0)
+	clickWhen(882, 570, 0x3AB2BA, 0, 0)
+	clickWhen(875, 641, 0x59C5CD, 0, 0)
+	clickWhen(874, 721, 0x5BC6CE, 0, 0)
+	Sleep 50
+
+	;Mute chat enemy
+	clickWhen(1023, 399, 0x59C4CD, 0, 0)
+	clickWhen(1024, 560, 0x5AC5CE, 0, 0)
+	clickWhen(1024, 640, 0x5CC6CF, 0, 0)
+	clickWhen(1024, 721, 0x5BC6CE, 0, 0)
+	Sleep 200
+	click(1474, 258)
 Return
 
 !^1::
@@ -333,24 +348,24 @@ follow(){
 	;1 (Done)
 	clickWhen(614, 407, 0xDD5590, 496, 422)
 	;2 (Done)
-	clickWhen(613, 479, 0xC6518A, 496, 494)
+	clickWhen(614, 479, 0xE65A97, 496, 494)
 	;3 (Done)
 	clickWhen(614, 552, 0xDF528E, 496, 567)
 	;4 (Done)
-	clickWhen(614, 624, 0xE2528F, 496, 639)
+	clickWhen(614, 625, 0xDF518C, 496, 639)
 	;5 (Done)
 	clickWhen(613, 695, 0xB84D83, 496, 715)
 
 	;6
-	clickWhen(1306, 405, 0xC55687, 1421, 430)
+	clickWhen(1306, 408, 0x9D3C67, 1421, 430)
 	;7 
-	clickWhen(1307, 479, 0xE05692, 1423, 496)
+	clickWhen(1307, 479, 0xE65A97, 1423, 496)
 	;8 (Done)
 	clickWhen(1306, 551, 0xE15691, 1424, 569)
 	;9 
 	clickWhen(1306, 624, 0xD54F88, 1422, 641)
 	;10
-	clickWhen(1306, 695, 0xC94F85, 1420, 716)
+	clickWhen(1306, 694, 0xD85790, 1420, 716)
 }
 
 followAll(){

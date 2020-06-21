@@ -136,7 +136,7 @@ Return
 		if(clickWhen(1057, 252, 0xE3D381, 959, 550)) 
 			continue
 		;[Done] If in battle type
-		if(clickWhen(1333, 325, 0xCE8C30, 840, 694)){
+		if(clickWhen(632, 278, 0x62D9E4, 835, 698)){
 			Sleep 300
 			click(964, 720)
 			continue
@@ -410,10 +410,10 @@ Return
 			Sleep 5000
 			Continue
 		}
+
 		;Continue statistic
 		If (clickWhen(1416, 282, 0xA01F36, -1, -1)){
 			match:=match+1
-			follow()
 			Sleep 500
 			click(1406, 804)
 			Sleep 5000
@@ -421,7 +421,8 @@ Return
 		}
 
 		;Commend all
-		if(clickWhen(852, 373, 0x7E8A98, -1, -1)){
+		if(clickWhen(967, 239, 0x973643, -1, -1)){
+			follow()
 			commendEveryone()
 			continue
 		}

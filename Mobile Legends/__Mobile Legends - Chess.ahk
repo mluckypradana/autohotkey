@@ -66,13 +66,32 @@ click(cx, cy){
 	;MouseMove x, y
 }
 
+^3::
+;	active:=true
+;	SoundBeep 550, 100
+;	while(active){
+;		clear()
+;		Sleep 200
+;		buy()
+;	}
+Return
+
+^4::
+;	active:=false
+;	SoundBeep 350, 100
+Return
+
 ^1::
 	active:=true
 	SoundBeep 550, 100
 	while(active){
-		clear()
-		Sleep 200
-		buy()
+		PixelGetColor, color, 968, 31, RGB
+		PixelGetColor, color2, 963, 40, RGB
+		If (equal(color, 0xD5DFE8)<4 && equal(color2, 0x3967A5)<4){
+			SoundBeep 350, 100
+			SoundBeep 350, 100
+			Sleep 60000
+		}
 	}
 Return
 
@@ -87,6 +106,9 @@ Return
 
 +2::
 	buy()
+Return
++3::
+	
 Return
 
 clear(){

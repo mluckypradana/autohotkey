@@ -87,6 +87,9 @@ Return
 		;Draft pick pager
 		if(clickWhen(1427, 545, 0x8CA6CE, 0, 0)) 
 			continue
+		;Close webview
+		if(clickWhen(1349, 814, 0xA9A9A9, 0, 0))
+			continue
 
 		;[Done]
 		while(active && isAllowMove()){
@@ -136,7 +139,7 @@ Return
 		if(clickWhen(1057, 252, 0xE3D381, 959, 550)) 
 			continue
 		;[Done] If in battle type
-		if(clickWhen(632, 278, 0x62D9E4, 835, 698)){
+		if(clickWhen(1319, 320, 0xE09E30, 835, 698)){
 			Sleep 300
 			click(964, 720)
 			continue
@@ -227,6 +230,7 @@ Return
 		;[Done] Close dialog invite 
 		PixelGetColor, color, 1142,592, RGB
 		If (equal(color,0xA07D5A)<4){
+			takeScreenshot()
 			click(839, 683)
 			click(841, 610)
 			Sleep 300
@@ -234,11 +238,20 @@ Return
 			click(955, 675)
 			Continue
 		}		
+		;Close reason dialog invite
+		if(clickWhen(762, 557, 0x3EDAFF, 960, 679))
+			continue
 		;Close dialog event fullscreen
 		if(clickWhen(1415, 306, 0x7BC8FE, 0, 0))
 			continue
+		;Close dialog purchase event
+		if(clickWhen(1352, 338, 0x7174B4, 0, 0))
+			continue
 		;[Done] Close dialog event fullscreen
 		if(clickWhen(1415, 306, 0x7CCBFF, 1415, 306))
+			continue
+		;Close dialog 7-day daily login
+		if(clickWhen(1373, 290, 0x74819C, 0, 0))
 			continue
 		;Close dialog daily event
 		if(clickWhen(1376, 329, 0x7DCDFF, 1376, 329)) 
@@ -268,6 +281,9 @@ Return
 			click(1048, 167)
 			Continue
 		}
+		;Close small dialog chat
+		if(clickWhen(889, 583, 0x99AAD3, 1216, 393))
+			continue
 
 		;CLose dialog buy hero
 		PixelGetColor, color, 977, 212, RGB
@@ -414,6 +430,8 @@ Return
 		;Continue statistic
 		If (clickWhen(1416, 282, 0xA01F36, -1, -1)){
 			match:=match+1
+			follow()
+			commendEveryone()
 			Sleep 500
 			click(1406, 804)
 			Sleep 5000
@@ -421,10 +439,10 @@ Return
 		}
 
 		;Commend all
-		if(clickWhen(967, 239, 0x973643, -1, -1)){
+		if(clickWhen(815, 376, 0x6F7F94, -1, -1)){
 			follow()
 			commendEveryone()
-			continue
+			Continue
 		}
 
 		;Continue finish match rank
@@ -500,7 +518,10 @@ Return
 		if(clickWhen(1344, 497, 0xA07D5A, 475, 261))
 			continue
 		;Back from profile
-		if(clickWhen(751, 317, 0xF1233B, 478, 263))
+		if(clickWhen(727, 317, 0xE31D35, 478, 263))
+			continue
+		;Back from inventory
+		if(clickWhen(1286, 246, 0x7CC6FD, 478, 263))
 			continue
 		;Close Conquest of Dawn dialog
 		if(clickWhen(1478, 377, 0x7CCDFF, 0, 0))
@@ -552,9 +573,7 @@ restartMobileLegends(){
 }
 
 !^d::
-	Msgbox %match% matches
-	;hasEnemy()
-	;mousemove 917, 314
+	takeScreenshot()
 Return
 
 commendEveryone(){
@@ -606,28 +625,34 @@ verifyHealthBar(x, y){
 	dX := x + 5
 	PixelGetColor, sideColor, %dX%, %y%
 	isHealthBar := equal(sideColor,color)<sensitivity
-	xValid := x<945 || x>997
-	yValid := y<529 || y>592
-	valid := (xValid || yValid) && isHealthBar
-	if(valid)
-		MouseMove, %x%, %y%
-	else{
-		;MouseMove, %x%, %y%
-		;Msgbox %isHealthBar% %xValid% %yValid% %valid% , %sideColor% %color%
-	}
-	return valid
+	xValid := x<931 || x>974
+	yValid := y<529 || y>589
+	return (xValid || yValid) && isHealthBar
 }
 
 hasEnemy(){
 	hasEnemy := false
-	;Enemy creep
-	PixelSearch, Px, Py,  528, 300, 1240, 761, 0x664bff, %sensitivity%, Fast
+	enemyColor := 0x3745ef
+	turretColor := 0x3640f4
+
+	;First lower player
+	PixelSearch, Px, Py, 508, 469, 1060, 970, %enemyColor%, %sensitivity%, Fast
 	If !ErrorLevel{ 
 		hasEnemy := verifyHealthBar(Px, Py)
 	}
-	PixelSearch, Px, Py,  528, 300, 1240, 761, 0x2A24D6, %sensitivity%, Fast
-	If !ErrorLevel{ 
-		hasEnemy := verifyHealthBar(Px, Py)
+	if(!hasEnemy){
+		;Second, around player
+		PixelSearch, Px, Py, 603, 303, 1227, 836, %enemyColor%, %sensitivity%, Fast
+		If !ErrorLevel{ 
+			hasEnemy := verifyHealthBar(Px, Py)
+		}	
+	}
+	if(!hasEnemy){
+		;Third, front of player
+		PixelSearch, Px, Py, 718, 194, 1292, 749, %enemyColor%, %sensitivity%, Fast
+		If !ErrorLevel{ 
+			hasEnemy := verifyHealthBar(Px, Py)
+		}	
 	}
 
 	return hasEnemy
@@ -792,4 +817,8 @@ followAll(){
 	click(1336, 650)
 	;10
 	click(1333, 718)
+}
+
+takeScreenshot(){
+	Send #{PrintScreen}
 }

@@ -38,25 +38,25 @@ Return
 	Send januariMoonton
 Return
 ^+2::
-	Send bgsprg@gmail.com
+	Send luckypradana32@gmail.com
 Return
 ^+3::
-	Send luckypradana32@gmail.com
+	Send venmupsg@gmail.com
+Return
+^+4::
+	Send ron88idn@gmail.com ;idron88123
+Return
+^+5::
+	Send maleskuliahid@gmail.com ;jujuku11
+Return
+^+6::
+	Send iqueue4@gmail.com
+Return
+^+7::
+	Send bgsprg@gmail.com
 Return
 ^+e::
 	Send Gembl0n9302
-Return
-^+4::
-	Send venmupsg@gmail.com
-Return
-^+5::
-	Send ron88idn@gmail.com ;idron88123
-Return
-^+6::
-	Send maleskuliahid@gmail.com ;jujuku11
-Return
-^+7::
-	Send iqueue4@gmail.com
 Return
 
 !c::
@@ -348,18 +348,18 @@ follow(){
 	;1 (Done)
 	clickWhen(614, 407, 0xDD5590, 496, 422)
 	;2 (Done)
-	clickWhen(614, 479, 0xE65A97, 496, 494)
+	clickWhen(614, 479, 0xE35794, 496, 494)
 	;3 (Done)
 	clickWhen(614, 552, 0xDF528E, 496, 567)
 	;4 (Done)
-	clickWhen(614, 625, 0xDF518C, 496, 639)
+	clickWhen(613, 623, 0xB7487D, 496, 639)
 	;5 (Done)
 	clickWhen(613, 695, 0xB84D83, 496, 715)
 
 	;6
 	clickWhen(1306, 408, 0x9D3C67, 1421, 430)
 	;7 
-	clickWhen(1307, 479, 0xE65A97, 1423, 496)
+	clickWhen(1306, 478, 0xCE538A, 1423, 496)
 	;8 (Done)
 	clickWhen(1306, 551, 0xE15691, 1424, 569)
 	;9 

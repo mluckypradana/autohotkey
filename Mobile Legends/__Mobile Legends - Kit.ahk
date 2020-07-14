@@ -1,4 +1,4 @@
-#if WinActive("ahk_exe Bluestacks.exe")
+;#if WinActive("ahk_exe Bluestacks.exe")
 #SingleInstance force
 setmousedelay -1
 setkeydelay -1
@@ -90,11 +90,10 @@ Return
 			continue
 		}
 		;Claim all activity
-		if(clickWhen(1380, 275, 0xDBA16A, 0, 0))
+		if(clickWhen(1380, 275, 0xDBA16A, 0, 0)){
+			Sleep 3000	
 			continue
-		;Claim in inbox
-		if(clickWhen(1337, 771, 0xA7815C, 0, 0))
-			continue
+		}
 		;Claim chess
 		if(clickWhen(1413, 328, 0xAB835D, 1359, 317))
 			continue
@@ -237,23 +236,38 @@ Return
 ;Mute
 !m::
 	click(956, 18)
-	Sleep 200
-	;Mute chat team (Second row first)
-	clickWhen(875, 478, 0x5BC3CB, 0, 0)
-	clickWhen(1024, 479, 0x5BC6CE, 0, 0)
-
-	clickWhen(877, 398, 0x5BC6CF, 0, 0)
-	clickWhen(882, 570, 0x3AB2BA, 0, 0)
-	clickWhen(875, 641, 0x59C5CD, 0, 0)
-	clickWhen(874, 721, 0x5BC6CE, 0, 0)
-	Sleep 50
-
-	;Mute chat enemy
-	clickWhen(1023, 399, 0x59C4CD, 0, 0)
-	clickWhen(1024, 560, 0x5AC5CE, 0, 0)
-	clickWhen(1024, 640, 0x5CC6CF, 0, 0)
-	clickWhen(1024, 721, 0x5BC6CE, 0, 0)
-	Sleep 200
+	Sleep 100
+	m1:=isColor(889, 398, 0x5BC6CE)
+	m2:=isColor(881, 479, 0x5BC6CF)
+	m3:=isColor(882, 570, 0x3AB2BA)
+	m4:=isColor(875, 641, 0x59C5CD)
+	m5:=isColor(874, 721, 0x5BC6CE)
+	m6:=isColor(1023, 399, 0x59C4CD)
+	m7:=isColor(1024, 479, 0x5BC6CE)
+	m8:=isColor(1024, 560, 0x5AC5CE)
+	m9:=isColor(1024, 640, 0x5CC6CF)
+	m10:=isColor(1024, 721, 0x5BC6CE)
+	if(m2)
+		click(875, 478)
+	if(m1)
+		click(889, 398)
+	if(m3)
+		click(882, 570)
+	if(m4)
+		click(875, 641)
+	if(m5)
+		click(874, 721)
+	if(m6)
+		click(1023, 399)
+	if(m7)
+		click(1024, 479)
+	if(m8)
+		click(1024, 560)
+	if(m9)
+		click(1024, 640)
+	if(m10)
+		click(1024, 721)
+	Sleep 100
 	click(1474, 258)
 Return
 
@@ -294,13 +308,30 @@ Return
 !5::
 	quickChatDrag(1452, 36)
 Return
+!t::
+	thumbsUp()
+Return
+
+
+thumbsUp(){
+	if(isColor(1467, 213, 0x9ECDE2)) {
+		Click, up, right
+		MouseGetPos cx, cy
+		MouseMove 1469, 222
+		SetMouseDelay 22
+		MouseClickDrag, Left, 1469, 222, 1396, 12
+		SetMouseDelay -1
+		MouseMove %cx%, %cy%
+		Click, down, right
+	}
+}
 
 quickChatDrag(x, y){
-	if(clickWhen(1467, 118, 0xE8B4B4, -1, -1)){
+	if(isColor(1467, 118, 0xE8B4B4)){
 		Click, up, right
 		MouseGetPos cx, cy
 		MouseMove 1467, 118
-		SetMouseDelay 20
+		SetMouseDelay 22
 		MouseClickDrag, Left, 1467 ,118, %x%, %y%
 		SetMouseDelay -1
 		MouseMove %cx%, %cy%
@@ -346,26 +377,33 @@ clickWhen(px, py, pcolor, cx, cy){
 
 follow(){
 	;1 (Done)
-	clickWhen(614, 407, 0xDD5590, 496, 422)
+	clickWhen(613, 406, 0xC95189, 496, 422)
+	clickWhen(613, 406, 0xBF4F85, 496, 422)
 	;2 (Done)
-	clickWhen(614, 479, 0xE35794, 496, 494)
+	clickWhen(613, 479, 0xB14A7E, 496, 494)
+	clickWhen(613, 479, 0xA9477B, 496, 494)
 	;3 (Done)
-	clickWhen(614, 552, 0xDF528E, 496, 567)
+	clickWhen(614, 551, 0xE55894, 496, 567)
+	clickWhen(614, 551, 0xE15692, 496, 567)
 	;4 (Done)
-	clickWhen(613, 623, 0xB7487D, 496, 639)
+	clickWhen(614, 620, 0xCA6095, 496, 639)
 	;5 (Done)
 	clickWhen(613, 695, 0xB84D83, 496, 715)
-
+	clickWhen(613, 696, 0xCF518B, 496, 715)
 	;6
-	clickWhen(1306, 408, 0x9D3C67, 1421, 430)
+	clickWhen(1306, 406, 0xD05289, 1421, 430)
+	clickWhen(1307, 407, 0xD8518C, 1421, 430)
 	;7 
-	clickWhen(1306, 478, 0xCE538A, 1423, 496)
+	clickWhen(1307, 475, 0xBA5685, 1423, 496)
+	clickWhen(1306, 479, 0xCD4F86, 1423, 496)
+	clickWhen(1306, 478, 0xD95690, 1423, 496)
 	;8 (Done)
-	clickWhen(1306, 551, 0xE15691, 1424, 569)
+	clickWhen(1306, 551, 0xE55995, 1424, 569)
 	;9 
-	clickWhen(1306, 624, 0xD54F88, 1422, 641)
+	clickWhen(1306, 624, 0xD6518A, 1422, 641)
 	;10
-	clickWhen(1306, 694, 0xD85790, 1420, 716)
+	clickWhen(1306, 695, 0xC34E81, 1420, 716)
+	clickWhen(1306, 696, 0xD25088, 1420, 716)
 }
 
 followAll(){

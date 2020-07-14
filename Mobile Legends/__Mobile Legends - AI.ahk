@@ -14,7 +14,12 @@ ads:=0
 maxAds:=10
 global actualScreenX:=1920
 global actualScreenY:=1080
-global sensitivity:=12
+global sensitivity:=4
+global brawlMatch:=false
+global memberDeleted:=false
+global memberSorted:=false
+global withSquadInvite:=false
+global withGroupInvite:=true
 
 !^+s::
 	ExitApp
@@ -42,8 +47,9 @@ Return
 ;Auto accept + Auto attack
 !.::
 	active:=true
-	SoundBeep 350, 100
-	while(active){
+	SoundBeep 350, 100	
+	while(active){	
+
 		;Defaults
 		;if(clickWhen(, , )) continue
 		Sleep 1000
@@ -107,24 +113,24 @@ Return
 			;[Done] Move player
 			Send {Up down}{Right down}
 			while(isAllowMove()){
-				if(hasEnemy()){	
-					attack()
-					halfRetreat()
- 					retreat()
+				if(attackWhenHasEnemy())
 					break
-				}
 				Send {Up down}{Right down}
-				Send {space}
+				Send g ;{space}
 				Send 54321
-				Send {space}
+				Send g ;{space}
 				Send {Right up}
 				Sleep 210
-				Send {space}
+				if(attackWhenHasEnemy())
+					break
+				Send g ;{space}
 				Send {Right down}
 				Loop, 7{
 					Sleep 100
-					Send {space}
+					Send g ;{space}
 				}
+				if(attackWhenHasEnemy())
+					break
 				if(stuckAtRight()){
 					Send {Up down}{Right up}
 					Sleep 3000
@@ -136,14 +142,69 @@ Return
 		}
 
 		;If on main menu and not finding match
-		if(clickWhen(1057, 252, 0xE3D381, 959, 550)) 
-			continue
-		;[Done] If in battle type
-		if(clickWhen(1319, 320, 0xE09E30, 835, 698)){
-			Sleep 300
-			click(964, 720)
+		if(clickWhen(1397, 247, 0xA7B9D8, -1, -1)) {
+			if(withGroupInvite && !memberDeleted){
+				click(1318, 492)
+			}else
+				click(959, 550)
 			continue
 		}
+
+		;Click setting
+		if(clickWhen(473, 653, 0xDF3C01, 620, 315))
+			continue
+
+		;If is in group members
+		if(isColor(457, 269, 0xDF3C01)){
+				if(memberDeleted){
+					click(1443, 265)
+					Sleep 500
+					click(1422, 267)
+					memberSorted:=false
+					continue
+				}
+				if(!isFullMember()){
+					memberDeleted:=true
+					continue
+				}
+				if(memberSorted){
+					;Delete member
+					if(!memberDeleted && !isColor(1344, 492, 0x529457)){
+						removeMember(1441, 745)
+						removeMember(1444, 670)
+						removeMember(1445, 616)
+						removeMember(1444, 554)
+						removeMember(1445, 489)
+						removeMember(1443, 430)
+						memberDeleted:=true
+						continue
+					}
+				}
+				else{				
+					;Sort member
+					click(1334, 319)
+					memberSorted:=true
+					continue
+				}
+		}
+
+		if(clickWhen(853, 699, 0x8D774F, 959,550)) 
+			continue
+		;If brawlMatch, pick brawl match in battle type
+		
+
+		;[Done] If in battle type pick AI
+		if(clickWhen(1323, 325, 0xD8962E, -1, -1)){
+			if(brawlMatch)
+				click(559, 693)
+			else
+				click(839, 697)
+			Sleep 500
+			click(973, 726)
+			
+			continue
+		}
+
 		;[Done] If in vs AI mode, click(brawl
 		if(clickWhen(644, 342, 0x96E0E9, 824, 504)){
 			Sleep 200
@@ -229,7 +290,8 @@ Return
 
 		;[Done] Close dialog invite 
 		PixelGetColor, color, 1142,592, RGB
-		If (equal(color,0xA07D5A)<4){
+		PixelGetColor, color2, 837, 688, RGB
+		If (equal(color,0xA07D5A)<4 || equal(color2, 0x0D2136)<4){
 			takeScreenshot()
 			click(839, 683)
 			click(841, 610)
@@ -294,10 +356,25 @@ Return
 		
 
 		;[Done] Start game
-		PixelGetColor, color, 1157, 423 , RGB
-		If (equal(color,0x256DA3)<4){
+		if(clickWhen(760, 729, 0xE7B075, -1, -1)){
+			if(withGroupInvite){
+				click(1061, 812)
+				sleep 500
+				if(withSquadInvite){
+					click(1063, 685)
+					sleep 200
+				}
+				click(1065, 723)
+				sleep 500
+				;Click no timeouts
+				click(927, 720)
+				Sleep 500
+				click(545, 448)
+				click(545, 448)
+				click(545, 448)
+				sleep 10000
+			}
 			click(858, 746)
-			Continue
 		}
 
 		;[Done] Accept game
@@ -430,6 +507,7 @@ Return
 		;Continue statistic
 		If (clickWhen(1416, 282, 0xA01F36, -1, -1)){
 			match:=match+1
+			memberDeleted:=false
 			follow()
 			commendEveryone()
 			Sleep 500
@@ -472,6 +550,9 @@ Return
 			click(1416, 353)
 			Continue
 		}
+		;Close recharge season page
+		if(clickWhen(1336, 292, 0x6A7198, 0, 0))
+			continue
 
 		;[Done] recharge page
 		PixelGetColor, color, 1386, 350, RGB
@@ -520,9 +601,6 @@ Return
 		;Back from profile
 		if(clickWhen(727, 317, 0xE31D35, 478, 263))
 			continue
-		;Back from inventory
-		if(clickWhen(1286, 246, 0x7CC6FD, 478, 263))
-			continue
 		;Close Conquest of Dawn dialog
 		if(clickWhen(1478, 377, 0x7CCDFF, 0, 0))
 			continue
@@ -552,8 +630,37 @@ Return
 		;Close update finished dialog
 		if(clickWhen(1041, 636, 0x998160, 0, 0))
 			continue
+		;Close dialog gmail login
+		if(clickWhen(554, 703, 0x808080, 958, 956))
+			continue
+		;Back from inventory
+		if(clickWhen(1072, 241, 0x5FBCE4, 475, 270))
+			continue
+		;Close not responding nox
+		if(clickWhen(483, 856, 0x282828, -1, -1)){
+			if(clickWhen(603, 792, 0xEAEAEA, 0, 0))	
+				continue
+		}
 	}
 Return
+
+removeMember(cx, cy){
+	click(cx, cy)
+	Sleep 500
+	click(1101, 673)
+	Sleep 1000
+}
+
+attackWhenHasEnemy(){
+	if(hasEnemy()){	
+		attack()
+		halfRetreat()
+ 		retreat()
+		return true	
+	}
+	else
+		return false
+}
 
 stuckAtRight(){
 	PixelGetColor, color, 1222, 553, RGB
@@ -573,7 +680,8 @@ restartMobileLegends(){
 }
 
 !^d::
-	takeScreenshot()
+	result:=isFullMember()
+	Msgbox %result%
 Return
 
 commendEveryone(){
@@ -621,13 +729,15 @@ isNotDead(){
 }
 
 verifyHealthBar(x, y){
-	PixelGetColor, color, %x%, %y%
-	dX := x + 5
-	PixelGetColor, sideColor, %dX%, %y%
-	isHealthBar := equal(sideColor,color)<sensitivity
+	dY := y + 2
+	PixelGetColor, color, %x%, %dY%
+	dX := x + 5		
+	PixelGetColor, sideColor, %dX%, %dY%
+	isHealthBar := equal(sideColor,color)<4
 	xValid := x<931 || x>974
 	yValid := y<529 || y>589
-	return (xValid || yValid) && isHealthBar
+	mouseMove x, y
+	return (xValid || yValid) ;&& isHealthBar
 }
 
 hasEnemy(){
@@ -647,13 +757,13 @@ hasEnemy(){
 			hasEnemy := verifyHealthBar(Px, Py)
 		}	
 	}
-	if(!hasEnemy){
-		;Third, front of player
-		PixelSearch, Px, Py, 718, 194, 1292, 749, %enemyColor%, %sensitivity%, Fast
-		If !ErrorLevel{ 
-			hasEnemy := verifyHealthBar(Px, Py)
-		}	
-	}
+	;if(!hasEnemy){
+	;	;Third, front of player
+	;	PixelSearch, Px, Py, 718, 194, 1292, 749, %enemyColor%, %sensitivity%, Fast
+	;	If !ErrorLevel{ 
+	;		hasEnemy := verifyHealthBar(Px, Py)
+	;	}	
+	;}
 
 	return hasEnemy
 }
@@ -716,10 +826,9 @@ attack(){
 
 ;[Done]
 isAllowMove(){
-	PixelGetColor, deadColor, 969, 48, RGB
-	PixelGetColor, batteryColor, 634, 11, RGB
-	allowMove :=batteryColor==0x00F900 && deadColor!=0xFE2619
-	
+	;PixelGetColor, deadColor, 969, 48, RGB
+	PixelGetColor, batteryColor, 625, 11, RGB
+	allowMove :=equal(batteryColor,0x00F900)<4 ;&& deadColor!=0xFE2619
 	return allowMove
 }
 
@@ -740,11 +849,15 @@ leaveBase(){
 	Send {Up up}{Right up}
 }
 
+isFullMember(){
+	return isColor(1461, 815, 0x7F97C7)
+}
+
 
 click(cx, cy){
-	MouseGetPos x, y
+	;MouseGetPos x, y
 	Click %cx%, %cy%
-	MouseMove x, y
+	;MouseMove x, y
 }
 
 clickWhen(px, py, pcolor, cx, cy){
@@ -771,28 +884,32 @@ coorY(y){
 
 follow(){
 	;1 (Done)
-	clickWhen(614, 407, 0xDD5590, 496, 422)
+	clickWhen(613, 406, 0xC95189, 496, 422)
+	clickWhen(613, 406, 0xBF4F85, 496, 422)
 	;2 (Done)
-	clickWhen(613, 479, 0xC6518A, 496, 494)
+	clickWhen(613, 479, 0xB14A7E, 496, 494)
 	;3 (Done)
-	clickWhen(614, 552, 0xDF528E, 496, 567)
+	clickWhen(614, 551, 0xE55894, 496, 567)
 	;4 (Done)
-	clickWhen(614, 624, 0xE2528F, 496, 639)
+	clickWhen(614, 620, 0xCA6095, 496, 639)
 	;5 (Done)
 	clickWhen(613, 695, 0xB84D83, 496, 715)
-
+	clickWhen(613, 696, 0xCF518B, 496, 715)
 	;6
-	clickWhen(1306, 405, 0xC55687, 1421, 430)
+	clickWhen(1306, 406, 0xD05289, 1421, 430)
+	clickWhen(1307, 407, 0xD8518C, 1421, 430)
 	;7 
-	clickWhen(1307, 479, 0xE05692, 1423, 496)
+	clickWhen(1307, 475, 0xBA5685, 1423, 496)
+	clickWhen(1306, 479, 0xCD4F86, 1423, 496)
+	clickWhen(1306, 478, 0xD95690, 1423, 496)
 	;8 (Done)
-	clickWhen(1306, 551, 0xE15691, 1424, 569)
+	clickWhen(1306, 551, 0xE55995, 1424, 569)
 	;9 
-	clickWhen(1306, 624, 0xD54F88, 1422, 641)
+	clickWhen(1306, 624, 0xD6518A, 1422, 641)
 	;10
-	clickWhen(1306, 695, 0xC94F85, 1420, 716)
+	clickWhen(1306, 695, 0xC34E81, 1420, 716)
+	clickWhen(1306, 696, 0xD25088, 1420, 716)
 }
-
 
 
 followAll(){
@@ -821,4 +938,9 @@ followAll(){
 
 takeScreenshot(){
 	Send #{PrintScreen}
+}
+
+isColor(px, py, pcolor) {
+	PixelGetColor, color, %px%, %py%, RGB
+	return equal(color, pcolor)<4
 }

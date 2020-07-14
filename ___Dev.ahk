@@ -28,6 +28,16 @@ Return
 	SoundBeep 350, 100
 return
 
+
+
+!+5::
+	Send bos.transaksi@gmail.com
+Return
+;Allpasswords
+!+6::
+	Send @DK007007
+Return
+
 Capslock & F3::
 	MouseGetPos x, y
 	Loop, 40{

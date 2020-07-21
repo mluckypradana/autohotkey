@@ -194,6 +194,7 @@ attack(){
 			Send f
 	    	Sleep, 200
 		}
+		Send v
 		Loop, 4{
 			Send a
 			Send f

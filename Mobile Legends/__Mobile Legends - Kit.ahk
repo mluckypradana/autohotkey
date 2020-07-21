@@ -1,4 +1,4 @@
-;#if WinActive("ahk_exe Bluestacks.exe")
+;#if WinActive("ahk_exe HD-Player.exe")
 #SingleInstance force
 setmousedelay -1
 setkeydelay -1
@@ -225,7 +225,7 @@ Return
 		Return
 Return
 
-!Enter::
++Enter::
 	if(isColor(1463, 991, 0xFFFFFF)){
 		click(1195, 803)
 		Sleep 200

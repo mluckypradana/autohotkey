@@ -19,7 +19,8 @@ global brawlMatch:=false
 global memberDeleted:=false
 global memberSorted:=false
 global withSquadInvite:=false
-global withGroupInvite:=true
+global withGroupInvite:=false
+global withDeleteMember:=true
 
 !^+s::
 	ExitApp
@@ -143,7 +144,7 @@ Return
 
 		;If on main menu and not finding match
 		if(clickWhen(1397, 247, 0xA7B9D8, -1, -1)) {
-			if(withGroupInvite && !memberDeleted){
+			if(withDeleteMember && !memberDeleted){
 				click(1318, 492)
 			}else
 				click(959, 550)
@@ -151,7 +152,7 @@ Return
 		}
 
 		;Click setting
-		if(clickWhen(473, 653, 0xDF3C01, 620, 315))
+		if(clickWhen(619, 307, 0xAEC2DC, 620, 315))
 			continue
 
 		;If is in group members
@@ -641,6 +642,12 @@ Return
 			if(clickWhen(603, 792, 0xEAEAEA, 0, 0))	
 				continue
 		}
+		;Close event dialog project
+		if(clickWhen(1470, 316, 0x7CCAFF, 0, 0))
+			continue
+		;Close mayhem mode dialog
+		if(clickWhen(1470, 306, 0x7CCAFF, 0, 0))
+			continue
 	}
 Return
 
@@ -810,6 +817,7 @@ attack(){
 			Send f
 	    	Sleep, 200
 		}
+		Send vvv
 		Loop, 4{
 			Send a
 			Send f
@@ -855,9 +863,9 @@ isFullMember(){
 
 
 click(cx, cy){
-	;MouseGetPos x, y
+	MouseGetPos x, y
 	Click %cx%, %cy%
-	;MouseMove x, y
+	MouseMove x, y
 }
 
 clickWhen(px, py, pcolor, cx, cy){

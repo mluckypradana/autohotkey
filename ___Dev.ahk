@@ -64,3 +64,12 @@ Capslock & RButton::
 	Send ^#{Right}
 	Send {Ctrl up}
 Return
+
++!t::
+	Send tools:text=""
+	Send {Left}
+Return
+
++!c::
+	Send tools:srcCompat="@tools:sample/backgrounds/scenic"
+Return

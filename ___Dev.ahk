@@ -6,6 +6,10 @@ SetCapsLockState, AlwaysOff
 setmousedelay -1
 setkeydelay -1
 
+global detectorX:=0
+global detectorY:=0
+global detectorColor:=0x000000
+
 !+4::  Winset, Alwaysontop, , A
 
 !+1::
@@ -65,11 +69,43 @@ Capslock & RButton::
 	Send {Ctrl up}
 Return
 
-+!t::
-	Send tools:text=""
-	Send {Left}
+;Detect color difference
++!^a::
+	SoundBeep 350, 100
+	MouseGetPos x, y
+	PixelGetColor, color, %x%, %y%, RGB
+	detectorX:=x
+	detectorY:=y
+	detectorColor:=color
+	colorDetectorEnabled:=true
+	while(colorDetectorEnabled){
+		Sleep 1000
+		if(!isColor(detectorX, detectorY, detectorColor)){
+			SoundBeep 350, 100
+		}
+	}
 Return
 
-+!c::
-	Send tools:srcCompat="@tools:sample/backgrounds/scenic"
++!^s::
+	colorDetectorEnabled:=false
+	SoundBeep 350, 100
 Return
+
+
+isColor(px, py, pcolor) {
+	PixelGetColor, color, %px%, %py%, RGB
+	return equal(color, pcolor)<4
+}
+
+
+equal( c1, c2 ) ; find the distance between 2 colors
+{ ; function by [VxE], return value range = [0, 441.67295593006372]
+; that just means that any two colors will have a distance less than 442
+   r1 := c1 >> 16
+   g1 := c1 >> 8 & 255
+   b1 := c1 & 255
+   r2 := c2 >> 16
+   g2 := c2 >> 8 & 255
+   b2 := c2 & 255
+   return Sqrt( (r1-r2)**2 + (g1-g2)**2 + (b1-b2)**2 )
+}

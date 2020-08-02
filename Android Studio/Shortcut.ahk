@@ -1,17 +1,17 @@
-CoordMode, Mouse, Screen
-CoordMode, Tooltip, Screen
-CoordMode, Pixel, Screen
-#SingleInstance force
-SetCapsLockState, AlwaysOff
-setmousedelay -1
-setkeydelay -1
-
-
-+!t::
+#Include ../___Basic.ahk
++#t::
+	Send {Enter}
 	Send tools:text=""
 	Send {Left}
 Return
 
-+!c::
++#c::
+	Send {Enter}
 	Send tools:srcCompat="@tools:sample/backgrounds/scenic"
+Return
+
+#t::
+	Send {Enter}
+	Send android:text="@{{}{}}"
+	Send {Left}{Left}
 Return

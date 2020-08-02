@@ -1,8 +1,10 @@
-#SingleInstance force
-CoordMode, Mouse, Screen
-CoordMode, Tooltip, Screen
-CoordMode, Pixel, Screen
-setmousedelay -1
+global sensitivity:=4
+global brawlMatch:=false
+global memberDeleted:=false
+global memberSorted:=false
+global withSquadInvite:=false
+global withGroupInvite:=false
+global withDeleteMember:=true
 active:=true
 attack:=true
 watchAds:=false
@@ -12,33 +14,10 @@ hasEnemy:=false
 match:=0
 ads:=0
 maxAds:=10
-global actualScreenX:=1920
-global actualScreenY:=1080
-global sensitivity:=4
-global brawlMatch:=false
-global memberDeleted:=false
-global memberSorted:=false
-global withSquadInvite:=false
-global withGroupInvite:=false
-global withDeleteMember:=true
 
-!^+s::
-	ExitApp
-Return
+#Include __Basic.ahk
 
 !+s::Suspend
-
-equal( c1, c2 ) ; find the distance between 2 colors
-{ ; function by [VxE], return value range = [0, 441.67295593006372]
-; that just means that any two colors will have a distance less than 442
-   r1 := c1 >> 16
-   g1 := c1 >> 8 & 255
-   b1 := c1 & 255
-   r2 := c2 >> 16
-   g2 := c2 >> 8 & 255
-   b2 := c2 & 255
-   return Sqrt( (r1-r2)**2 + (g1-g2)**2 + (b1-b2)**2 )
-}
 
 !,::
 	active:=false
@@ -118,7 +97,7 @@ Return
 					break
 				Send {Up down}{Right down}
 				Send g ;{space}
-				Send 54321
+				Send 45321
 				Send g ;{space}
 				Send {Right up}
 				Sleep 210
@@ -691,19 +670,6 @@ restartMobileLegends(){
 	Msgbox %result%
 Return
 
-commendEveryone(){
-	Loop 2{
-		click(449,432)
-		click(449,716)
-		click(449,501)
-		click(449,648)
-		click(449,576)
-	}
-	click(561, 426)
-	click(1357, 425)
-}
-
-
 halfRetreat(){
 	MouseGetPos x, y
 	MouseMove 640, 948
@@ -859,96 +825,4 @@ leaveBase(){
 
 isFullMember(){
 	return isColor(1461, 815, 0x7F97C7)
-}
-
-
-click(cx, cy){
-	MouseGetPos x, y
-	Click %cx%, %cy%
-	MouseMove x, y
-}
-
-clickWhen(px, py, pcolor, cx, cy){
-	PixelGetColor, color, coorX(px), coorY(py), RGB
-	If (equal(color, pcolor)<4){
-		if(cx==0)
-			click(coorX(px), coorY(py))
-		if(cx>0)
-			click(coorX(cx), coorY(cy))
-		
-		return true
-	}
-	return false
-}
-
-coorX(x){
-	return A_ScreenWidth  * x / actualScreenX
-}
-
-coorY(y){
-	return A_ScreenHeight  * y / actualScreenY
-}
-
-
-follow(){
-	;1 (Done)
-	clickWhen(613, 406, 0xC95189, 496, 422)
-	clickWhen(613, 406, 0xBF4F85, 496, 422)
-	;2 (Done)
-	clickWhen(613, 479, 0xB14A7E, 496, 494)
-	;3 (Done)
-	clickWhen(614, 551, 0xE55894, 496, 567)
-	;4 (Done)
-	clickWhen(614, 620, 0xCA6095, 496, 639)
-	;5 (Done)
-	clickWhen(613, 695, 0xB84D83, 496, 715)
-	clickWhen(613, 696, 0xCF518B, 496, 715)
-	;6
-	clickWhen(1306, 406, 0xD05289, 1421, 430)
-	clickWhen(1307, 407, 0xD8518C, 1421, 430)
-	;7 
-	clickWhen(1307, 475, 0xBA5685, 1423, 496)
-	clickWhen(1306, 479, 0xCD4F86, 1423, 496)
-	clickWhen(1306, 478, 0xD95690, 1423, 496)
-	;8 (Done)
-	clickWhen(1306, 551, 0xE55995, 1424, 569)
-	;9 
-	clickWhen(1306, 624, 0xD6518A, 1422, 641)
-	;10
-	clickWhen(1306, 695, 0xC34E81, 1420, 716)
-	clickWhen(1306, 696, 0xD25088, 1420, 716)
-}
-
-
-followAll(){
-	;1
-	click(583, 431)
-	;2
-	click(582, 502)
-	;3
-	click(582, 577)
-	;4
-	click(582, 643)
-	;5
-	click(582, 719)
-
-	;6
-	click(1333, 426)
-	;7
-	click(1334, 503)
-	;8
-	click(1336, 575)
-	;9
-	click(1336, 650)
-	;10
-	click(1333, 718)
-}
-
-takeScreenshot(){
-	Send #{PrintScreen}
-}
-
-isColor(px, py, pcolor) {
-	PixelGetColor, color, %px%, %py%, RGB
-	return equal(color, pcolor)<4
 }

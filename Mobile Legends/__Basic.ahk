@@ -1,34 +1,15 @@
+
 ;#if WinActive("ahk_exe HD-Player.exe")
-#SingleInstance force
-setmousedelay -1
-setkeydelay -1
 active:=true
 hasEnemy:=false
 
-!h::
-	WinGet, winid
-MsgBox, winid=%winid%
-;do some stuff
-WinActivate ahk_pid %winid%
-Return
+#Include ../___Basic.ahk
 
 ;Escape::
 ;	ExitApp
 ;Return
 
 ;!s::Suspend
-
-equal( c1, c2 ) ; find the distance between 2 colors
-{ ; function by [VxE], return value range = [0, 441.67295593006372]
-; that just means that any two colors will have a distance less than 442
-   r1 := c1 >> 16
-   g1 := c1 >> 8 & 255
-   b1 := c1 & 255
-   r2 := c2 >> 16
-   g2 := c2 >> 8 & 255
-   b2 := c2 & 255
-   return Sqrt( (r1-r2)**2 + (g1-g2)**2 + (b1-b2)**2 )
-}
 
 ^+1::
 	Send mluckypradana@gmail.com
@@ -91,9 +72,15 @@ Return
 		}
 		;Claim all activity
 		if(clickWhen(1380, 275, 0xDBA16A, 0, 0)){
-			Sleep 3000	
+			Sleep 1000	
 			continue
 		}
+		;Claim all BP activity
+		clickWhen(720, 728, 0xFF344C, 0, 0)
+		clickWhen(832, 726, 0xFF344C, 0, 0)
+		clickWhen(949, 728, 0xFF344C, 0, 0)
+		clickWhen(1061, 729, 0xFF344C, 0, 0)
+
 		;Claim chess
 		if(clickWhen(1413, 328, 0xAB835D, 1359, 317))
 			continue
@@ -311,6 +298,11 @@ Return
 !t::
 	thumbsUp()
 Return
+!y::
+	click(796, 1064)
+	Sleep 200
+	click(739, 685)
+Return
 
 
 thumbsUp(){
@@ -339,12 +331,6 @@ quickChatDrag(x, y){
 	}
 }
 
-click(cx, cy){
-	MouseGetPos x, y
-	Click %cx%, %cy%
-	MouseMove x, y
-}
-
 commendEveryone(){
 	Loop 2{
 		click(449,432)
@@ -355,24 +341,6 @@ commendEveryone(){
 	}
 	click(561, 426)
 	click(1357, 425)
-}
-
-isColor(px, py, pcolor) {
-	PixelGetColor, color, %px%, %py%, RGB
-	return equal(color, pcolor)<4
-}
-
-clickWhen(px, py, pcolor, cx, cy){
-	PixelGetColor, color, %px%, %py%, RGB
-	If (equal(color, pcolor)<4){
-		if(cx==0)
-			click(px, py)
-		if(cx>0)
-			click(cx, cy)
-		
-		return true
-	}
-	return false
 }
 
 follow(){

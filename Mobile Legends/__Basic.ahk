@@ -1,6 +1,5 @@
 
-;#if WinActive("ahk_exe HD-Player.exe")
-active:=true
+assistEnabled:=true
 hasEnemy:=false
 
 #Include ../___Basic.ahk
@@ -53,13 +52,13 @@ Return
 
 ;Watch ads
 !'::
-	active:=false
+	assistEnabled:=false
 	SoundBeep 350, 100
 Return
 !/::
-	active:=true
+	assistEnabled:=true
 	SoundBeep 350, 100
-	while(active){
+	while(assistEnabled){
 		;[Done] Get gold chest
 		if(clickWhen(618, 345, 0xFF3E4D, 581, 373)) {
 			Sleep 1000

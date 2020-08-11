@@ -8,6 +8,7 @@ setkeydelay -1
 
 global actualScreenX:=1920
 global actualScreenY:=1080
+global volumeMuted:=false
 
 equal( c1, c2 ) { ; function by [VxE], return value range = [0, 441.67295593006372]
 ; that just means that any two colors will have a distance less than 442
@@ -129,4 +130,8 @@ Return
 +!^s::
 	colorDetectorEnabled:=false
 	SoundBeep 350, 100
+Return
+
++!^`::
+	SoundSet, +1, , mute
 Return

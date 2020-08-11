@@ -3,9 +3,11 @@ global brawlMatch:=false
 global memberDeleted:=false
 global memberSorted:=false
 global withSquadInvite:=false
-global withGroupInvite:=false
+global withGroupInvite:=true
 global withDeleteMember:=true
-active:=true
+global activeGroupMember:=0
+global maxActiveGroupMember:=5
+aiEnabled:=true
 attack:=true
 watchAds:=false
 arenaColor:=0x000000
@@ -20,15 +22,15 @@ maxAds:=10
 !+s::Suspend
 
 !,::
-	active:=false
+	aiEnabled:=false
 	SoundBeep 350, 100
 Return
 
 ;Auto accept + Auto attack
 !.::
-	active:=true
+	aiEnabled:=true
 	SoundBeep 350, 100	
-	while(active){	
+	while(aiEnabled){	
 
 		;Defaults
 		;if(clickWhen(, , )) continue
@@ -42,6 +44,9 @@ Return
 			continue
 		;Close idm
 		if(clickWhen(832, 590, 0xFCE100, 1193, 528))
+			continue
+		;Close idm
+		if(clickWhen(767, 616, 0xFCE100, 1257, 691))
 			continue
 
 		;Open bluestacks mobile legends in isladn
@@ -78,7 +83,11 @@ Return
 			continue
 
 		;[Done]
-		while(active && isAllowMove()){
+		while(aiEnabled && isAllowMove()){
+			;Close idm
+			if(clickWhen(767, 616, 0xFCE100, 1257, 691))
+				continue
+				
 			;Surender
 			if(clickWhen(526, 281, 0xDCA26A, 0, 0))
 				continue
@@ -135,7 +144,7 @@ Return
 			continue
 
 		;If is in group members
-		if(isColor(457, 269, 0xDF3C01)){
+		if(isColor(455, 266, 0xE03B01)){
 				if(memberDeleted){
 					click(1443, 265)
 					Sleep 500
@@ -150,18 +159,14 @@ Return
 				if(memberSorted){
 					;Delete member
 					if(!memberDeleted && !isColor(1344, 492, 0x529457)){
-						removeMember(1441, 745)
-						removeMember(1444, 670)
-						removeMember(1445, 616)
-						removeMember(1444, 554)
-						removeMember(1445, 489)
-						removeMember(1443, 430)
+						followAndRemoveMember()
 						memberDeleted:=true
 						continue
 					}
 				}
 				else{				
 					;Sort member
+					followMembers()
 					click(1334, 319)
 					memberSorted:=true
 					continue
@@ -337,7 +342,7 @@ Return
 
 		;[Done] Start game
 		if(clickWhen(760, 729, 0xE7B075, -1, -1)){
-			if(withGroupInvite){
+			if(withGroupInvite && activeGroupMember < maxActiveGroupMember){
 				click(1061, 812)
 				sleep 500
 				if(withSquadInvite){
@@ -354,6 +359,8 @@ Return
 				click(545, 448)
 				sleep 10000
 			}
+			if(!isColor(677, 427, 0x074479))
+				activeGroupMember:=activeGroupMember+1
 			click(858, 746)
 		}
 
@@ -630,6 +637,45 @@ Return
 	}
 Return
 
+followAndRemoveMember(){
+	followMembers()
+	removeMember(1441, 745)
+	removeMember(1444, 670)
+	removeMember(1445, 616)
+	removeMember(1444, 554)
+	removeMember(1445, 489)
+	removeMember(1443, 430)
+}
+
+followMembers(){
+	;1
+	if(isColor(628, 446, 0xE15792) &&(isColor(1037, 420, 0xBB9A5F)||isColor(1024, 421, 0x688074)))
+		followMember(406)
+	;2
+	if(isColor(628, 509, 0xDB558E) &&(isColor(1035, 483, 0xC4A665)||isColor(1024, 485, 0x738F7D)))
+		followMember(470)
+	;3 legend
+	if(isColor(628, 572, 0xDA538C) &&(isColor(1034, 547, 0xCAA853)||isColor(1023, 545, 0x5A7064)))
+		followMember(537)
+	;4
+	if(isColor(627, 634, 0xDF5690) &&(isColor(1035, 610, 0xE4CA6D)||isColor(1024, 613, 0x8EAF94)))
+		followMember(597)
+	;5
+	if(isColor(628, 698, 0xD64F88) &&(isColor(1034, 673, 0xF0DD9C)||isColor(1024, 673, 0x72927E)))
+		followMember(660)
+	;6
+	if(isColor(627, 760, 0xE25591) &&(isColor(1032, 734, 0xD2C589)||isColor(1023, 737, 0x798C78)))
+		followMember(720)
+
+	Sleep 200
+}
+followMember(y){
+	click(611, y)
+	sleep 800
+	click(949, y)
+	sleep 800
+}
+
 removeMember(cx, cy){
 	click(cx, cy)
 	Sleep 500
@@ -666,8 +712,7 @@ restartMobileLegends(){
 }
 
 !^d::
-	result:=isFullMember()
-	Msgbox %result%
+	followMembers()
 Return
 
 halfRetreat(){

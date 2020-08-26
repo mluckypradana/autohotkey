@@ -20,6 +20,9 @@ equal( c1, c2 ) { ; function by [VxE], return value range = [0, 441.672955930063
    b2 := c2 & 255
    return Sqrt( (r1-r2)**2 + (g1-g2)**2 + (b1-b2)**2 )
 }
+clickL(cx, cy){
+	Click %cx%, %cy%
+}
 
 click(cx, cy){
 	MouseGetPos x, y
@@ -135,3 +138,21 @@ Return
 +!^`::
 	SoundSet, +1, , mute
 Return
+
+
+#1::
+	WinGetClass, Clipboard, A
+	WinGetTitle, Title, A
+	MsgBox, The active window is "%Title%".
+Return
+
++!^Up::moveMouse(0, -1)
++!^Down::moveMouse(0, 1)
++!^Left::moveMouse(-1, 0)
++!^Right::moveMouse(1, 0)
+moveMouse(dx, dy){
+	MouseGetPos x, y
+	x:=x+dx
+	y:=y+dy
+	MouseMove x, y
+}

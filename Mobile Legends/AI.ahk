@@ -18,9 +18,7 @@ ads:=0
 maxAds:=10
 
 #Include __Basic.ahk
-
-!+s::Suspend
-
+#IfWinActive BlueStacks
 !,::
 	aiEnabled:=false
 	SoundBeep 350, 100
@@ -67,7 +65,7 @@ Return
 		if(clickWhen(618, 345, 0xFF3E4D, 581, 373)) 
 			continue
 		;[Done] Get free chest
-		if(clickWhen(615, 449, 0xFF354E, 580, 477)) 
+		if(clickWhen(612, 449, 0xFF4872, 580, 477)) 
 			continue
 		;Get confim chest
 		if(clickWhen(682, 531, 0x12842f, 0, 0)) 
@@ -130,8 +128,14 @@ Return
 			;MouseMove 100, 500
 		}
 
+		;Back to lobby
+		if(isColor(999, 729, 0x4873D2) && isColor(922, 241, 0x74A8B4)){
+			click(999, 729)
+			continue
+		}
+
 		;If on main menu and not finding match
-		if(clickWhen(1397, 247, 0xA7B9D8, -1, -1)) {
+		if(isColor(1397, 247, 0xA7B9D8) && isColor(922, 241, 0x74A8B4)) {
 			if(withDeleteMember && !memberDeleted){
 				click(1318, 492)
 			}else
@@ -144,7 +148,7 @@ Return
 			continue
 
 		;If is in group members
-		if(isColor(455, 266, 0xE03B01)){
+		if(isColor(481, 265, 0xB63400)){
 				if(memberDeleted){
 					click(1443, 265)
 					Sleep 500
@@ -158,11 +162,11 @@ Return
 				}
 				if(memberSorted){
 					;Delete member
-					if(!memberDeleted && !isColor(1344, 492, 0x529457)){
+					if(!memberDeleted && !isColor(1344, 492, 0x529457))
 						followAndRemoveMember()
-						memberDeleted:=true
-						continue
-					}
+					memberDeleted:=true
+					continue
+				
 				}
 				else{				
 					;Sort member
@@ -274,9 +278,7 @@ Return
 			continue
 
 		;[Done] Close dialog invite 
-		PixelGetColor, color, 1142,592, RGB
-		PixelGetColor, color2, 837, 688, RGB
-		If (equal(color,0xA07D5A)<4 || equal(color2, 0x0D2136)<4){
+		If (isColor(1142,592, 0xA07D5A) || isColor(837, 688, 0x0D2136) || isColor(835, 676, 0x0B1B2C)){
 			takeScreenshot()
 			click(839, 683)
 			click(841, 610)
@@ -298,7 +300,7 @@ Return
 		if(clickWhen(1415, 306, 0x7CCBFF, 1415, 306))
 			continue
 		;Close dialog 7-day daily login
-		if(clickWhen(1373, 290, 0x74819C, 0, 0))
+		if(clickWhen(1373, 290, 0x74819C, 0, 0)||clickWhen(1374, 300, 0x677791, 0, 0))
 			continue
 		;Close dialog daily event
 		if(clickWhen(1376, 329, 0x7DCDFF, 1376, 329)) 
@@ -492,13 +494,13 @@ Return
 		}
 
 		;Continue statistic
-		If (clickWhen(1416, 282, 0xA01F36, -1, -1)){
+		If (isColor(435, 369, 0x082B54) && isColor(1435, 374, 0x0C112A)){
 			match:=match+1
 			memberDeleted:=false
 			follow()
 			commendEveryone()
 			Sleep 500
-			click(1406, 804)
+			click(1351, 803)
 			Sleep 5000
 			Continue
 		}
@@ -636,6 +638,7 @@ Return
 			continue
 	}
 Return
+#IfWinActive
 
 followAndRemoveMember(){
 	followMembers()

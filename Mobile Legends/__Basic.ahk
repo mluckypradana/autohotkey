@@ -1,41 +1,36 @@
-
 assistEnabled:=true
 hasEnemy:=false
 
 #Include ../___Basic.ahk
-
-;Escape::
-;	ExitApp
-;Return
-
+#IfWinActive BlueStacks
 ;!s::Suspend
 
-^+1::
+#1::
 	Send mluckypradana@gmail.com
 Return
 ;Allpasswords
-^+q::
+#q::
 	Send januariMoonton
 Return
-^+2::
+#2::
 	Send luckypradana32@gmail.com
 Return
-^+3::
+#3::
 	Send venmupsg@gmail.com
 Return
-^+4::
+#4::
 	Send ron88idn@gmail.com ;idron88123
 Return
-^+5::
+#5::
 	Send maleskuliahid@gmail.com ;jujuku11
 Return
-^+6::
+#6::
 	Send iqueue4@gmail.com
 Return
-^+7::
+#7::
 	Send bgsprg@gmail.com
 Return
-^+e::
+#e::
 	Send Gembl0n9302
 Return
 
@@ -65,7 +60,7 @@ Return
 			continue
 		}
 		;[Done] Get free chest
-		if(clickWhen(615, 449, 0xFF354E, 580, 477)) {
+		if(clickWhen(612, 449, 0xFF4872, 580, 477)) {
 			Sleep 1000
 			continue
 		}
@@ -78,7 +73,7 @@ Return
 		clickWhen(720, 728, 0xFF344C, 0, 0)
 		clickWhen(832, 726, 0xFF344C, 0, 0)
 		clickWhen(949, 728, 0xFF344C, 0, 0)
-		clickWhen(1061, 729, 0xFF344C, 0, 0)
+		clickWhen(1062, 728, 0xFF344C, 0, 0)
 
 		;Claim chess
 		if(clickWhen(1413, 328, 0xAB835D, 1359, 317))
@@ -122,6 +117,10 @@ Return
 			}
 			continue
 		}
+		;Inbox
+		;Claim and send bp
+		if(isColor(1124, 765, 0xF8E07D))
+			click(1249, 754)
 	}
 Return
 
@@ -140,65 +139,70 @@ Return
 
 ;Buy roam item
 !f::
-click(1464, 24)
-Sleep 100
-click(485, 722)
-Sleep 100
-click(810, 326)
-Sleep 100
-click(1233, 542)
-Sleep 100
-click(1377, 821)
-Sleep 100
-click(484, 345)
-Sleep 100
-click(1462, 271)
+	click(1464, 24)
+	Sleep 100
+	click(485, 722)
+	Sleep 100
+	click(810, 326)
+	Sleep 100
+	click(1233, 542)
+	Sleep 100
+	click(1377, 821)
+	Sleep 100
+	click(484, 345)
+	Sleep 100
+	click(1462, 271)
 Return
 
 
 
-;Prioritize 
+;Prioritize mana
 !g::
-click(1465, 23)
-Sleep 100
-click(475, 407)
-Sleep 100
-click(804, 638)
-Sleep 100
-click(1394, 454)
-Sleep 100
-click(1405, 353)
-Sleep 100
-click(483, 350)
-Sleep 100
-click(1464, 268)
+	click(1465, 23)
+	Sleep 100
+	click(475, 407)
+	Sleep 100
+	click(804, 638)
+	Sleep 100
+	click(1394, 454)
+	Sleep 100
+	click(1405, 353)
+	Sleep 100
+	click(483, 350)
+	Sleep 100
+	click(1464, 268)
 Return
 
 ;Closest target
 !d::
-MouseGetPos x, y
-click(634, 49)
-Sleep 100
-click(483, 162)
-Sleep 100
-click(1229, 706)
-Sleep 100
-click(481, 23)
-MouseMove x, y
+	click(634, 49)
+	Sleep 200
+	click(475, 404)
+	click(483, 162)
+	click(482, 158)
+	Sleep 100
+	click(1229, 706)
+	Sleep 100
+	click(475, 269)
+	click(481, 23)
 Return
 
 
 ;Lowest HP
 !s::
 	click(634, 49)
-	Sleep 100
+	Sleep 200
+	click(475, 404)
 	click(483, 162)
+	click(482, 158)
 	Sleep 100
 	click(953, 705)
 	Sleep 100
+	click(475, 269)
 	click(481, 23)
 Return
 
+;Reply
 !r::
 	;In general chat
 	if(clickWhen(503, 754, 0x307BC8, 0, 0))
@@ -206,12 +210,43 @@ Return
 	;In profile dialog
 	if(clickWhen(829, 582, 0x9CADD5, 0, 0))
 		Return
-	;In chat box
-	if(clickWhen(1129, 799, 0x192C46, 0, 0))
-		Return
-Return
+	
+	if(inLobby()){
+		click(705, 812)
+		return
+	}
+	;In lobby chat
+	if(inChat() && !isColor(436, 970, 0xFFFFFF)){
+		click(880, 803)
+		return
+	}
+	;When texting
+	if(&& isColor(436, 970, 0xFFFFFF)){
+		finishTexting()
 
-+Enter::
+		;In lobby chat - Send
+		if(inChat())
+			click(1213, 797)
+		if(inClassicPick())
+			click(1012, 822)
+	}
+Return
+finishTexting(){
+	click(1408, 1022)
+	Sleep 200
+}
+inClassicPick(){
+	return isColor(1012, 822, 0x28527F)
+}
+inLobby() { 
+	return isColor(468, 811, 0x1F466D) 
+}
+inChat() { 
+	return isColor(536, 808, 0x73C5F8) 
+}
+
+
+!Enter::
 	if(isColor(1463, 991, 0xFFFFFF)){
 		click(1195, 803)
 		Sleep 200
@@ -257,17 +292,17 @@ Return
 	click(1474, 258)
 Return
 
-!^1::
+^!1::
 	click(686, 593)
 	Sleep 1000
-	click(701, 786)
+	click(701, 786)	
 	Sleep 300
 	click(484, 263)
 	Sleep 500
 	click(484, 263)
 Return
 
-!^2::
+^!2::
 	click(908, 595)
 	Sleep 1000
 	click(701, 786)
@@ -297,12 +332,34 @@ Return
 !t::
 	thumbsUp()
 Return
-!y::
+^1::
+	quickChatStreamer(1087, 447)
+Return
+^2::
+	quickChatStreamer(1079, 498)
+Return
+^3::
+	quickChatStreamer(1065, 540)
+Return
+^4::
+	quickChatStreamer(1048, 586)
+Return
+^5::
+	quickChatStreamer(1055, 638)
+Return
+^6::
+	quickChatStreamer(1050, 685)
+Return
+^s::
+	takeScreenshot()
+Return
+#IfWinActive
+
+quickChatStreamer(x, y){
 	click(796, 1064)
 	Sleep 200
-	click(739, 685)
-Return
-
+	click(x, y)
+}
 
 thumbsUp(){
 	if(isColor(1467, 213, 0x9ECDE2)) {

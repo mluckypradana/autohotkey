@@ -55,6 +55,7 @@ coorY(y){
 
 takeScreenshot(){
 	Send #{PrintScreen}
+	SoundBeep 350, 50
 }
 
 
@@ -66,6 +67,7 @@ isColor(px, py, pcolor) {
 global detectorX:=0
 global detectorY:=0
 global detectorColor:=0x000000
+global shakeMouseEnabled:=false
 
 
 ^!+1::
@@ -135,8 +137,14 @@ Return
 	SoundBeep 350, 100
 Return
 
-+!^`::
+#+`::
 	SoundSet, +1, , mute
+Return
+#+q::
+	Send {Volume_up}
+Return
+#+a::
+	Send {Volume_down}
 Return
 
 
@@ -155,4 +163,51 @@ moveMouse(dx, dy){
 	x:=x+dx
 	y:=y+dy
 	MouseMove x, y
+}
+
+;Shake mouse
+;Detect color difference
+#+e::
+	SoundBeep 350, 100
+	shakeMouseEnabled:=true
+	while(shakeMouseEnabled){
+		MouseGetPos x, y
+		if(mod(x, 2)==0)
+			x:=x+3
+		else
+			x:=x-3
+		MouseMove x, y
+	}
+Return
+
+#+d::
+	shakeMouseEnabled:=false
+	SoundBeep 350, 100
+Return
+
+
+getCurrentDate(){
+	FormatTime, currentDate,, dd/MM/yyyy
+	return currentDate
+}
+getDayOfWeek(){
+	currentDate := getCurrentDate()
+	StringSplit, currentDate, datestring, /
+	date := d3 d1 d2
+	FormatTime, dayWeek, %date%, dddd
+	if(dayWeek=="Monday")
+		day:=1
+	else if(dayWeek=="Tuesday")
+		day:=2
+	else if(dayWeek=="Wednesday")
+		day:=3
+	else if(dayWeek=="Thursday")
+		day:=4
+	else if(dayWeek=="Friday")
+		day:=5
+	else if(dayWeek=="Saturday")
+		day:=6
+	else if(dayWeek=="Sunday")
+		day:=7
+	return day
 }

@@ -6,7 +6,7 @@ global withSquadInvite:=false
 global withGroupInvite:=true
 global withDeleteMember:=true
 global activeGroupMember:=0
-global maxActiveGroupMember:=5
+global maxActiveGroupMember:=99
 aiEnabled:=true
 attack:=true
 watchAds:=false
@@ -27,12 +27,23 @@ Return
 ;Auto accept + Auto attack
 !.::
 	aiEnabled:=true
-	SoundBeep 350, 100	
+	SoundBeep 350, 100
+	if(getDayOfWeek()==1||getDayOfWeek()==2){
+		withDeleteMember:=false
+		withGroupInvite:=false
+	}
 	while(aiEnabled){	
 
 		;Defaults
 		;if(clickWhen(, , )) continue
 		Sleep 1000
+
+		;Close fake serial number idm
+		if(clickWhen(707, 440, 0xFCE100, 1202, 625))
+			continue
+		;Close idm registration
+		if(clickWhen(702, 341, 0x4B82E5,1149, 675))
+			continue
 
 		;Close idm 
 		if(clickWhen(789, 534, 0xFCE100, 1149, 477)) 
@@ -47,11 +58,18 @@ Return
 		if(clickWhen(767, 616, 0xFCE100, 1257, 691))
 			continue
 
-		;Open bluestacks mobile legends in isladn
-		if(clickWhen(294, 184, 0x3F51B5, 0, 0)){
-			Sleep 3000
-			continue		
+		;Open My Games in Bluestacks
+		if(isColor(429, 119, 0xFFFFFF)){
+			click(125, 129)
+			continue
 		}
+		;Opoen Mobile legends in Bluestacks
+		if(clickWhen(987, 135, 0xFFD039, 875, 544)){
+			Sleep 3000
+			Send {F11}
+			continue
+		}
+
 		;Open mobile legends in island
 		if(clickWhen(1150, 134, 0x3F51B5, 1364, 297)){
 			Sleep 1000
@@ -65,7 +83,7 @@ Return
 		if(clickWhen(618, 345, 0xFF3E4D, 581, 373)) 
 			continue
 		;[Done] Get free chest
-		if(clickWhen(612, 449, 0xFF4872, 580, 477)) 
+		if(clickWhen(611, 450, 0xFF3B55, 580, 477)) 
 			continue
 		;Get confim chest
 		if(clickWhen(682, 531, 0x12842f, 0, 0)) 
@@ -79,6 +97,18 @@ Return
 		;Close webview
 		if(clickWhen(1349, 814, 0xA9A9A9, 0, 0))
 			continue
+
+
+		;[Done] Close dialog invite 
+		If (isColor(1142,592, 0xA07D5A) || isColor(837, 688, 0x0D2136) || isColor(835, 676, 0x0B1B2C) || isColor(839, 679, 0x0C1E31)){
+			takeScreenshot()
+			click(839, 683)
+			click(841, 610)
+			Sleep 300
+			click(768, 549)
+			click(955, 675)
+			Continue
+		}
 
 		;[Done]
 		while(aiEnabled && isAllowMove()){
@@ -188,7 +218,7 @@ Return
 				click(559, 693)
 			else
 				click(839, 697)
-			Sleep 500
+			Sleep 1500
 			click(973, 726)
 			
 			continue
@@ -276,17 +306,6 @@ Return
 		;If not connected
 		if(clickWhen(1093, 655, 0xAF855D, 1097, 671))
 			continue
-
-		;[Done] Close dialog invite 
-		If (isColor(1142,592, 0xA07D5A) || isColor(837, 688, 0x0D2136) || isColor(835, 676, 0x0B1B2C)){
-			takeScreenshot()
-			click(839, 683)
-			click(841, 610)
-			Sleep 300
-			click(768, 549)
-			click(955, 675)
-			Continue
-		}		
 		;Close reason dialog invite
 		if(clickWhen(762, 557, 0x3EDAFF, 960, 679))
 			continue
@@ -364,6 +383,7 @@ Return
 			if(!isColor(677, 427, 0x074479))
 				activeGroupMember:=activeGroupMember+1
 			click(858, 746)
+			memberDeleted:=false
 		}
 
 		;[Done] Accept game
@@ -400,6 +420,9 @@ Return
 
 		;AFK when start game
 		if(clickWhen(909, 646, 0xB2885F, 909, 646))
+			continue
+		;Violation Notice
+		if(clickWhen(1156, 488, 0xED4242, 966, 741))
 			continue
 		
 		;AFK
@@ -496,12 +519,11 @@ Return
 		;Continue statistic
 		If (isColor(435, 369, 0x082B54) && isColor(1435, 374, 0x0C112A)){
 			match:=match+1
-			memberDeleted:=false
 			follow()
 			commendEveryone()
 			Sleep 500
 			click(1351, 803)
-			Sleep 5000
+			Sleep 1000
 			Continue
 		}
 
@@ -590,6 +612,10 @@ Return
 		;Back from profile
 		if(clickWhen(727, 317, 0xE31D35, 478, 263))
 			continue
+		if(isColor(542, 267, 0xB09570) && isColor(459, 255, 0xFFE0AD)){
+			click(478, 263)
+			continue
+		}
 		;Close Conquest of Dawn dialog
 		if(clickWhen(1478, 377, 0x7CCDFF, 0, 0))
 			continue
@@ -872,5 +898,5 @@ leaveBase(){
 }
 
 isFullMember(){
-	return isColor(1461, 815, 0x7F97C7)
+	return isColor(1460, 818, 0x5B75A2)
 }

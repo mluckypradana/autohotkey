@@ -40,6 +40,10 @@ Return
 	commendEveryone()
 Return
 
+!+c::
+	follow()
+Return
+
 !v::
 	follow()
 Return
@@ -60,7 +64,7 @@ Return
 			continue
 		}
 		;[Done] Get free chest
-		if(clickWhen(612, 449, 0xFF4872, 580, 477)) {
+		if(clickWhen(611, 450, 0xFF3B55, 580, 477)) {
 			Sleep 1000
 			continue
 		}
@@ -102,19 +106,10 @@ Return
 			Sleep 2000
 			continue
 		}
-
-		;Force like
-		if(clickWhen(1203, 798, 0x88A9FD, 0, 0)){
-			Sleep 1000
-			continue
-		}
 		;Force like profile
-		if(clickWhen(1176, 325, 0x3D3D3D, -1, -1)){
-			PixelGetColor, color, 1443, 621, RGB
-			If (equal(color, 0x274071)<4){
-				click(1442, 621)
-				Sleep 1000
-			}
+		if(isColor(1443, 621, 0x274071)){
+			click(1442, 621)
+			Sleep 500
 			continue
 		}
 		;Inbox
@@ -229,11 +224,16 @@ Return
 			click(1213, 797)
 		if(inClassicPick())
 			click(1012, 822)
+		if(inDraftPick())
+			click(652, 819)
 	}
 Return
 finishTexting(){
 	click(1408, 1022)
 	Sleep 200
+}
+inDraftPick(){
+	return isColor(652, 819, 0x29507B)
 }
 inClassicPick(){
 	return isColor(1012, 822, 0x28527F)
@@ -307,8 +307,6 @@ Return
 	Sleep 1000
 	click(701, 786)
 	Sleep 100
-	click(484, 263)
-	Sleep 500
 	click(484, 263)
 	Sleep 500
 	click(484, 263)
@@ -415,19 +413,20 @@ follow(){
 	clickWhen(613, 695, 0xB84D83, 496, 715)
 	clickWhen(613, 696, 0xCF518B, 496, 715)
 	;6
-	clickWhen(1306, 406, 0xD05289, 1421, 430)
-	clickWhen(1307, 407, 0xD8518C, 1421, 430)
-	;7 
-	clickWhen(1307, 475, 0xBA5685, 1423, 496)
-	clickWhen(1306, 479, 0xCD4F86, 1423, 496)
-	clickWhen(1306, 478, 0xD95690, 1423, 496)
+	if(clickWhen(1306, 406, 0xD05289, 1421, 430)||clickWhen(1307, 407, 0xD8518C, 1421, 430))
+		click(1462, 420)
+	;7
+	if(clickWhen(1307, 475, 0xBA5685, 1423, 496)||clickWhen(1306, 479, 0xCD4F86, 1423, 496)||clickWhen(1306, 478, 0xD95690, 1423, 496))
+		click(1463, 489)
 	;8 (Done)
-	clickWhen(1306, 551, 0xE55995, 1424, 569)
+	if(clickWhen(1306, 551, 0xE55995, 1424, 569))
+		click(1460, 565)
 	;9 
-	clickWhen(1306, 624, 0xD6518A, 1422, 641)
+	if(clickWhen(1306, 624, 0xD6518A, 1422, 641))
+		click(1461, 637)
 	;10
-	clickWhen(1306, 695, 0xC34E81, 1420, 716)
-	clickWhen(1306, 696, 0xD25088, 1420, 716)
+	if(clickWhen(1306, 695, 0xC34E81, 1420, 716)||clickWhen(1306, 696, 0xD25088, 1420, 716))
+		click(1463, 711)
 }
 
 followAll(){

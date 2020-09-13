@@ -4,6 +4,11 @@
 	Send tools:text=""
 	Send {Left}
 Return
++#v::
+	Send {Enter}
+	Send tools:visibility=""
+	Send {Left}
+Return
 
 +#c::
 	Send {Enter}

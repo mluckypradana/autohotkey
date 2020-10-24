@@ -1,4 +1,22 @@
 #Include ../___Basic.ahk
+
+
+#!l::
+	FileRead, Clipboard, _LinearLayout.txt
+	Send, ^v
+	Send {Up}
+Return
+#!i::
+	FileRead, Clipboard, _ImageView.txt
+	Send, ^v
+	Send {Up}
+Return
+#!t::
+	FileRead, Clipboard, _TextView.txt
+	Send, ^v
+	Send {Up}{Left}
+Return
+
 +#t::
 	Send {Enter}
 	Send tools:text=""
@@ -10,13 +28,7 @@ Return
 	Send {Left}
 Return
 
-+#c::
++#b::
 	Send {Enter}
 	Send tools:srcCompat="@tools:sample/backgrounds/scenic"
-Return
-
-#t::
-	Send {Enter}
-	Send android:text="@{{}{}}"
-	Send {Left}{Left}
 Return

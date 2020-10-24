@@ -5,8 +5,6 @@ global memberSorted:=false
 global withSquadInvite:=false
 global withGroupInvite:=true
 global withDeleteMember:=true
-global activeGroupMember:=0
-global maxActiveGroupMember:=99
 aiEnabled:=true
 attack:=true
 watchAds:=false
@@ -29,8 +27,8 @@ Return
 	aiEnabled:=true
 	SoundBeep 350, 100
 	if(getDayOfWeek()==1||getDayOfWeek()==2){
-		withDeleteMember:=false
-		withGroupInvite:=false
+	;	withDeleteMember:=false
+	;	withGroupInvite:=false
 	}
 	while(aiEnabled){	
 
@@ -79,12 +77,17 @@ Return
 			continue
 		}
 
+		
 		;[Done] Get gold chest
-		if(clickWhen(618, 345, 0xFF3E4D, 581, 373)) 
+		if(clickWhen(613, 345, 0xD74D61, 581, 373)) {
+			Sleep 1000
 			continue
+		}
 		;[Done] Get free chest
-		if(clickWhen(611, 450, 0xFF3B55, 580, 477)) 
+		if(clickWhen(612, 450, 0xB8384A, 580, 477)) {
+			Sleep 1000
 			continue
+		}
 		;Get confim chest
 		if(clickWhen(682, 531, 0x12842f, 0, 0)) 
 			continue
@@ -363,7 +366,7 @@ Return
 
 		;[Done] Start game
 		if(clickWhen(760, 729, 0xE7B075, -1, -1)){
-			if(withGroupInvite && activeGroupMember < maxActiveGroupMember){
+			if(withGroupInvite){
 				click(1061, 812)
 				sleep 500
 				if(withSquadInvite){
@@ -380,10 +383,19 @@ Return
 				click(545, 448)
 				sleep 10000
 			}
-			if(!isColor(677, 427, 0x074479))
-				activeGroupMember:=activeGroupMember+1
 			click(858, 746)
 			memberDeleted:=false
+		}
+
+		;Recieve Reward
+		if(isColor(685, 341, 0x7A7B6C)){
+			if(isColor(855, 764, 0xAC845D))
+				click(855, 764)
+			if(isColor(1225, 760, 0xB2885F))
+				click(1225, 760)
+			else
+				click(1051, 767)
+			Continue
 		}
 
 		;[Done] Accept game
@@ -419,8 +431,9 @@ Return
 		}
 
 		;AFK when start game
-		if(clickWhen(909, 646, 0xB2885F, 909, 646))
+		if(clickWhen(909, 646, 0xB2885F, 909, 646)){
 			continue
+		}
 		;Violation Notice
 		if(clickWhen(1156, 488, 0xED4242, 966, 741))
 			continue
@@ -440,11 +453,12 @@ Return
 		}
 
 		;[Done] Victory prompt
-		PixelGetColor, color, 950, 552, RGB
-		If (equal(color,0xF6CE72)<12){
-			click(965, 801)
-			Continue
-		}
+		if(clickWhen(968, 484, 0xDFA774, 0, 0))
+			continue
+		
+		;Defeat prompt
+		if(clickWhen(753, 536, 0x661110, 0, 0))
+			continue
 
 		;[Done] Continue summary graph
 		PixelGetColor, color, 451, 803 , RGB
@@ -481,7 +495,7 @@ Return
 			Continue
 		}
 		;Continue Achievement 4
-		if(clickWhen(442, 653, 0xB91F1B, 1400, 745))
+		if(clickWhen(442, 653, 0xB91F1B, 1382, 811))
 			continue
 
 		;Credit celestial level
@@ -490,6 +504,9 @@ Return
 			click(959, 814)
 			Continue
 		}
+		;Back from National Arena Contest
+		if(clickWhen(988, 809, 0x56422E, 480, 266))
+			continue
 
 		;Credit score prompt
 		PixelGetColor, color, 757, 490 , RGB
@@ -517,7 +534,7 @@ Return
 		}
 
 		;Continue statistic
-		If (isColor(435, 369, 0x082B54) && isColor(1435, 374, 0x0C112A)){
+		If (isColor(1452, 296, 0xCE2B48)){
 			match:=match+1
 			follow()
 			commendEveryone()
@@ -611,6 +628,9 @@ Return
 			continue
 		;Back from profile
 		if(clickWhen(727, 317, 0xE31D35, 478, 263))
+			continue
+		;Back from live stream
+		if(clickWhen(1377, 256, 0x3B549E, 478, 263))
 			continue
 		if(isColor(542, 267, 0xB09570) && isColor(459, 255, 0xFFE0AD)){
 			click(478, 263)
@@ -781,8 +801,8 @@ verifyHealthBar(x, y){
 	dX := x + 5		
 	PixelGetColor, sideColor, %dX%, %dY%
 	isHealthBar := equal(sideColor,color)<4
-	xValid := x<931 || x>974
-	yValid := y<529 || y>589
+	xValid := x<921 || x>984
+	yValid := y<519 || y>599
 	mouseMove x, y
 	return (xValid || yValid) ;&& isHealthBar
 }

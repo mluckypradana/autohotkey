@@ -1,5 +1,6 @@
-assistEnabled:=true
-hasEnemy:=false
+global assistEnabled:=true
+global mockingEnabled:=false
+global hasEnemy:=false
 
 #Include ../___Basic.ahk
 #IfWinActive BlueStacks
@@ -30,8 +31,14 @@ Return
 #7::
 	Send bgsprg@gmail.com
 Return
+#8::
+	Send ainkregea@yahoo.com ;Facebook
+Return
 #e::
 	Send Gembl0n9302
+Return
+#r::
+	Send mamahsob
 Return
 
 !c::
@@ -48,7 +55,6 @@ Return
 	follow()
 Return
 
-
 ;Watch ads
 !'::
 	assistEnabled:=false
@@ -59,12 +65,12 @@ Return
 	SoundBeep 350, 100
 	while(assistEnabled){
 		;[Done] Get gold chest
-		if(clickWhen(618, 345, 0xFF3E4D, 581, 373)) {
+		if(clickWhen(613, 345, 0xD74D61, 581, 373)) {
 			Sleep 1000
 			continue
 		}
 		;[Done] Get free chest
-		if(clickWhen(611, 450, 0xFF3B55, 580, 477)) {
+		if(clickWhen(612, 450, 0xB8384A, 580, 477)) {
 			Sleep 1000
 			continue
 		}
@@ -74,9 +80,9 @@ Return
 			continue
 		}
 		;Claim all BP activity
-		clickWhen(720, 728, 0xFF344C, 0, 0)
-		clickWhen(832, 726, 0xFF344C, 0, 0)
-		clickWhen(949, 728, 0xFF344C, 0, 0)
+		clickWhen(719, 728, 0xB63648, 0, 0)
+		clickWhen(834, 728, 0xB43547, 0, 0)
+		clickWhen(947, 728, 0xB73749, 0, 0)
 		clickWhen(1062, 728, 0xFF344C, 0, 0)
 
 		;Claim chess
@@ -92,8 +98,13 @@ Return
 		if(clickWhen(899, 733, 0x879AFC, 1380, 319))
 			continue
 		;Receive reward
-		if(clickWhen(959, 746, 0xD99F69, 959, 746)){
-			Sleep 500
+		if(isColor(683, 342, 0x7D7D6E)||isColor(684, 342, 0x7F7F6D)){
+			if(isColor(855, 764, 0xAC845D))
+				click(855, 764)
+			if(isColor(1225, 760, 0xB2885F))
+				click(1225, 760)
+			else
+				click(1051, 767)
 		}
 		;Receive usable reward
 		clickWhen(718, 744, 0xA8825C, 718, 744)
@@ -121,6 +132,22 @@ Return
 
 !+d::	
 	;Claim chess
+Return
+
+;Zoom camera
+!q::
+	click(631, 52)
+	Sleep 50
+	click(814, 441)
+	click(485, 34)
+Return
+
+;Zoom out camera
+!e::
+	click(631, 52)
+	Sleep 50
+	click(921, 437)
+	click(485, 34)
 Return
 
 ;Ignore invite
@@ -351,7 +378,74 @@ Return
 ^s::
 	takeScreenshot()
 Return
+;Sell all item
+!+^r::
+	click(1462, 27)
+	Sleep 90
+	sellAllItem()
+	buyBasicItem()
+	click(1461, 273)
+Return
+!z::
+	click(428, 292)
+	Sleep 100
+	click(673, 274)
+Return
+!x::
+	click(428, 292)
+	Sleep 100
+	click(807, 277)
+Return
 #IfWinActive
+buyBasicItem(){
+	;Roam
+	click(484, 717)
+	Sleep 100
+	click(1226, 547)
+	buy()
+	;Shoes
+	click(481, 587)
+	Sleep 90
+	click(1155, 447)
+	buy()
+	;Attack
+	click(483, 408)
+	Sleep 90
+	click(1109, 544)
+	buy()
+	;Defense
+	click(484, 535)
+	Sleep 90
+	click(1068, 448)
+	buy()
+	click(811, 423)
+	Sleep 90
+	click(1315, 456)
+	buy()
+	click(485, 473)
+	Sleep 90
+	click(1064, 452)
+	buy()
+}
+buy(){
+	Sleep 90
+	click(1333, 816)
+	Sleep 90
+}
+sellAllItem(){
+	click(592, 803)	
+	buy()
+	click(653, 797)
+	buy()
+	click(728, 798)
+	buy()
+	click(796, 800)
+	buy()
+	click(867, 802)
+	buy()
+	click(929, 800)
+	buy()
+}
 
 quickChatStreamer(x, y){
 	click(796, 1064)
@@ -400,32 +494,28 @@ commendEveryone(){
 follow(){
 	;1 (Done)
 	clickWhen(613, 406, 0xC95189, 496, 422)
-	clickWhen(613, 406, 0xBF4F85, 496, 422)
 	;2 (Done)
-	clickWhen(613, 479, 0xB14A7E, 496, 494)
-	clickWhen(613, 479, 0xA9477B, 496, 494)
+	clickWhen(613, 481, 0xDB538E, 496, 494)
 	;3 (Done)
-	clickWhen(614, 551, 0xE55894, 496, 567)
-	clickWhen(614, 551, 0xE15692, 496, 567)
+	clickWhen(613, 555, 0xD1538D, 496, 567)
 	;4 (Done)
-	clickWhen(614, 620, 0xCA6095, 496, 639)
+	clickWhen(613, 629, 0xDF5691, 496, 639)
 	;5 (Done)
-	clickWhen(613, 695, 0xB84D83, 496, 715)
-	clickWhen(613, 696, 0xCF518B, 496, 715)
+	clickWhen(613, 703, 0xDE5691, 496, 715)
 	;6
 	if(clickWhen(1306, 406, 0xD05289, 1421, 430)||clickWhen(1307, 407, 0xD8518C, 1421, 430))
 		click(1462, 420)
 	;7
-	if(clickWhen(1307, 475, 0xBA5685, 1423, 496)||clickWhen(1306, 479, 0xCD4F86, 1423, 496)||clickWhen(1306, 478, 0xD95690, 1423, 496))
+	if(clickWhen(1305, 481, 0xDA528C, 1423, 496)||clickWhen(1306, 479, 0xCD4F86, 1423, 496)||clickWhen(1306, 478, 0xD95690, 1423, 496))
 		click(1463, 489)
 	;8 (Done)
-	if(clickWhen(1306, 551, 0xE55995, 1424, 569))
+	if(clickWhen(1305, 555, 0xCC4E84, 1424, 569))
 		click(1460, 565)
 	;9 
-	if(clickWhen(1306, 624, 0xD6518A, 1422, 641))
+	if(clickWhen(1306, 629, 0xE25792, 1422, 641))
 		click(1461, 637)
 	;10
-	if(clickWhen(1306, 695, 0xC34E81, 1420, 716)||clickWhen(1306, 696, 0xD25088, 1420, 716))
+	if(clickWhen(1305, 703, 0xDC558F, 1420, 716)||clickWhen(1306, 696, 0xD25088, 1420, 716))
 		click(1463, 711)
 }
 

@@ -98,13 +98,10 @@ Return
 		if(clickWhen(899, 733, 0x879AFC, 1380, 319))
 			continue
 		;Receive reward
-		if(isColor(683, 342, 0x7D7D6E)||isColor(684, 342, 0x7F7F6D)){
-			if(isColor(855, 764, 0xAC845D))
-				click(855, 764)
-			if(isColor(1225, 760, 0xB2885F))
-				click(1225, 760)
-			else
-				click(1051, 767)
+		if((isColor(687, 342, 0x7B7A6B) && isColor(1246, 342, 0x79786A)) || (isColor(683, 342, 0x7D7D6D)&&isColor(1246, 342, 0x78786B)) || (isColor(685, 342, 0x7B7C6E) && isColor(1246, 341, 0x78786A))){
+			Sleep 400
+			Send {Esc}
+			Sleep 500
 		}
 		;Receive usable reward
 		clickWhen(718, 744, 0xA8825C, 718, 744)
@@ -112,21 +109,17 @@ Return
 		clickWhen(1053, 728, 0xBE9D64, 1053, 728)
 		;Send Agate
 		if(clickWhen(724, 519, 0xF54789, 1153, 644)){
-			Sleep 200
+			Sleep 500
 			click(1084, 671)
 			Sleep 2000
 			continue
 		}
 		;Force like profile
-		if(isColor(1443, 621, 0x274071)){
+		if(isColor(1441, 622, 0x253E6F)&&isColor(542, 265, 0xB19974)){
 			click(1442, 621)
 			Sleep 500
 			continue
 		}
-		;Inbox
-		;Claim and send bp
-		if(isColor(1124, 765, 0xF8E07D))
-			click(1249, 754)
 	}
 Return
 
@@ -155,7 +148,7 @@ Return
 	click(839, 683)
 	click(841, 610)
 	Sleep 300
-	click(768, 549)
+	click(772, 618)
 	click(955, 675)
 Return
 
@@ -243,18 +236,24 @@ Return
 		return
 	}
 	;When texting
-	if(&& isColor(436, 970, 0xFFFFFF)){
+	if(isColor(436, 970, 0xFFFFFF))
 		finishTexting()
-
-		;In lobby chat - Send
-		if(inChat())
-			click(1213, 797)
-		if(inClassicPick())
-			click(1012, 822)
-		if(inDraftPick())
-			click(652, 819)
-	}
+	
+	;Send when texting
+	if(inFriendChat())
+		click(1220, 797)
+	if(inChat())
+		click(1213, 797)
+	if(inClassicPick())
+		click(1012, 822)
+	if(inDraftPick())
+		click(652, 819)
 Return
+
+Numpad4::
+	Msgbox haha
+Return
+
 finishTexting(){
 	click(1408, 1022)
 	Sleep 200
@@ -267,6 +266,9 @@ inClassicPick(){
 }
 inLobby() { 
 	return isColor(468, 811, 0x1F466D) 
+}
+inFriendChat() { 
+	return isColor(586, 467, 0x479FF8) 
 }
 inChat() { 
 	return isColor(536, 808, 0x73C5F8) 

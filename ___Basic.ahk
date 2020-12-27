@@ -35,9 +35,9 @@ clickWhen(px, py, pcolor, cx, cy){
 	PixelGetColor, color, coorX(px), coorY(py), RGB
 	If (equal(color, pcolor)<4){
 		if(cx==0)
-			click(coorX(px), coorY(py))
+			click(px, py)
 		if(cx>0)
-			click(coorX(cx), coorY(cy))
+			click(cx, cy)
 		
 		return true
 	}
@@ -177,6 +177,7 @@ moveMouse(dx, dy){
 		else
 			x:=x-3
 		MouseMove x, y
+		Sleep 60000
 	}
 Return
 
@@ -210,4 +211,9 @@ getDayOfWeek(){
 	else if(dayWeek=="Sunday")
 		day:=7
 	return day
+}
+
+rand(v1, v2){
+	Random, value, v1, v2
+	return value
 }

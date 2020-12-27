@@ -1,3 +1,4 @@
+global winRemaining:=4
 global sensitivity:=4
 global brawlMatch:=false
 global memberDeleted:=false
@@ -5,6 +6,7 @@ global memberSorted:=false
 global withSquadInvite:=false
 global withGroupInvite:=true
 global withDeleteMember:=true
+global withArena:=true
 aiEnabled:=true
 attack:=true
 watchAds:=false
@@ -14,6 +16,33 @@ hasEnemy:=false
 match:=0
 ads:=0
 maxAds:=10
+
+y := 1006
+xs := []
+xs[0] := 692
+xs[1] := 783
+xs[2] := 883
+xy := []
+xy[0,0] := 671
+xy[0,1] := 575
+xy[1,0] := 745
+xy[1,1] := 682
+xy[2,0] := 699
+xy[2,1] := 456
+xy[3,0] := 785
+xy[3,1] := 589
+xy[4,0] := 865
+xy[4,1] := 725
+xy[5,0] := 778
+xy[5,1] := 485
+xy[6,0] := 892
+xy[6,1] := 648
+xy[7,0] := 781
+xy[7,1] := 381
+xy[8,0] := 883
+xy[8,1] := 537
+xy[9,0] := 1017
+xy[9,1] := 713
 
 #Include __Basic.ahk
 #IfWinActive BlueStacks
@@ -31,7 +60,6 @@ Return
 	;	withGroupInvite:=false
 	}
 	while(aiEnabled){	
-
 		;Defaults
 		;if(clickWhen(, , )) continue
 		Sleep 1000
@@ -55,28 +83,6 @@ Return
 		;Close idm
 		if(clickWhen(767, 616, 0xFCE100, 1257, 691))
 			continue
-
-		;Open My Games in Bluestacks
-		if(isColor(429, 119, 0xFFFFFF)){
-			click(125, 129)
-			continue
-		}
-		;Opoen Mobile legends in Bluestacks
-		if(clickWhen(987, 135, 0xFFD039, 875, 544)){
-			Sleep 3000
-			Send {F11}
-			continue
-		}
-
-		;Open mobile legends in island
-		if(clickWhen(1150, 134, 0x3F51B5, 1364, 297)){
-			Sleep 1000
-			click(1380, 305)
-			Sleep 3000
-			Send {F11}
-			continue
-		}
-
 		
 		;[Done] Get gold chest
 		if(clickWhen(613, 345, 0xD74D61, 581, 373)) {
@@ -101,19 +107,95 @@ Return
 		if(clickWhen(1349, 814, 0xA9A9A9, 0, 0))
 			continue
 
-
 		;[Done] Close dialog invite 
 		If (isColor(1142,592, 0xA07D5A) || isColor(837, 688, 0x0D2136) || isColor(835, 676, 0x0B1B2C) || isColor(839, 679, 0x0C1E31)){
 			takeScreenshot()
 			click(839, 683)
 			click(841, 610)
 			Sleep 300
-			click(768, 549)
+			click(772, 618)
 			click(955, 675)
 			Continue
 		}
 
+		;------------------------------------Arena match
+		if(withArena){
+			;Start arena match
+			if(isColor(873, 655, 0xD9AE49)){
+				;Click victory reward
+				click(1416, 361)
+				Sleep 500
+				click(1235, 364)
+				Sleep 1500
+				
+				if(winRemaining>0){
+					click(967, 669)			
+				}
+				;Click back
+				else{
+					click(457, 259)
+				}
+				continue
+			}
+
+			;Close reward info
+			if(isColor(755, 363, 0x1F3C59) && isColor(1237, 361, 0xC9B288)){
+				click(1238, 360)
+				continue
+			}
+
+			;Recieve reward
+			if(isColor(1013, 753, 0xBC8E61)){
+				click(1013, 753)
+				continue
+			}
+
+			;Obtain new card
+			if(isColor(1049, 771, 0xB98F62)){
+				click(962, 755)
+				continue
+			}
+
+			;Close match
+			if(isColor(1462, 799, 0xADD9FA)){
+				;Win arena			
+				if(!isColor(979, 535, 0x767A7A)){
+					winRemaining:=winRemaining-1
+				}
+				click(967, 795)
+				continue
+			}
+
+			;In match
+			if(isColor(952, 207, 0x4D8777)){
+				if(targetIndex > 6){
+					heroIndex := rand(0, 9)
+					drag(1050, y, xy[heroIndex][0],  xy[heroIndex][1])
+					Sleep 100
+					heroIndex := rand(0, 9)
+					drag(1145, y, xy[heroIndex][0],  xy[heroIndex][1])
+					Sleep 100
+					heroIndex := rand(0, 9)
+					drag(1238, y, xy[heroIndex][0],  xy[heroIndex][1])
+					Sleep 100
+				}	
+				targetIndex := rand(0, 9)
+				drag(xs[0], y, xy[targetIndex][0],  xy[targetIndex][1])
+				Sleep 100
+				targetIndex := rand(0, 9)
+				drag(xs[1], y, xy[targetIndex][0],  xy[targetIndex][1])
+				Sleep 100
+				targetIndex := rand(0, 9)
+				drag(xs[2], y, xy[targetIndex][0],  xy[targetIndex][1])
+				Sleep 100
+				continue
+			}
+		}
+
+		;----------------------------------
+
 		;[Done]
+		;In match
 		while(aiEnabled && isAllowMove()){
 			;Close idm
 			if(clickWhen(767, 616, 0xFCE100, 1257, 691))
@@ -170,18 +252,20 @@ Return
 		;If on main menu and not finding match
 		if(isColor(1397, 247, 0xA7B9D8) && isColor(922, 241, 0x74A8B4)) {
 			if(withDeleteMember && !memberDeleted){
-				click(1318, 492)
+				click(1319, 401)
 			}else
 				click(959, 550)
 			continue
 		}
 
-		;Click setting
-		if(clickWhen(619, 307, 0xAEC2DC, 620, 315))
+		;Click group setting & type something
+		if(clickWhen(619, 307, 0xAEC2DC, -1, -1)){
+			click(620, 315)
 			continue
+		}
 
 		;If is in group members
-		if(isColor(481, 265, 0xB63400)){
+		if(isColor(458, 277, 0xDDA601)){
 				if(memberDeleted){
 					click(1443, 265)
 					Sleep 500
@@ -195,8 +279,11 @@ Return
 				}
 				if(memberSorted){
 					;Delete member
-					if(!memberDeleted && !isColor(1344, 492, 0x529457))
+					if(!memberDeleted && !isColor(1344, 492, 0x529457)){
 						followAndRemoveMember()
+						followAndRemoveMember()
+						followAndRemoveMember()
+					}
 					memberDeleted:=true
 					continue
 				
@@ -333,6 +420,9 @@ Return
 		;[Done] Close dialog event
 		if(clickWhen(962, 745, 0xDCA26A, 962, 745)) 
 			continue
+		;[Done] Close dialog event
+		if(clickWhen(1425, 322, 0x83D3E4, 0, 0))
+			continue
 
 		;Close dialog webview
 		PixelGetColor, color, 990, 601, RGB
@@ -363,28 +453,37 @@ Return
 			Continue
 		}
 		
-
 		;[Done] Start game
 		if(clickWhen(760, 729, 0xE7B075, -1, -1)){
-			if(withGroupInvite){
-				click(1061, 812)
-				sleep 500
-				if(withSquadInvite){
-					click(1063, 685)
-					sleep 200
+			;Prevent start game when not AI
+			;if(!isColor(738, 261, 0x35CC0B)&&!isColor(739, 261, 0x17E400)){
+			;	click(470, 260)
+			;}			
+			;else{
+				if(withGroupInvite){
+					click(1061, 812)
+					sleep 500
+					if(withSquadInvite){
+						click(1063, 685)
+						sleep 200
+					}
+					click(1065, 723)
+					sleep 900
+					click(1065, 723)
+					sleep 900
+					click(1065, 723)
+					sleep 900
+					;Click Player Mastery
+					click(919, 691)
+					Sleep 500
+					click(545, 448)
+					click(545, 448)
+					click(545, 448)
+					sleep 10000
 				}
-				click(1065, 723)
-				sleep 500
-				;Click no timeouts
-				click(927, 720)
-				Sleep 500
-				click(545, 448)
-				click(545, 448)
-				click(545, 448)
-				sleep 10000
-			}
-			click(858, 746)
-			memberDeleted:=false
+				click(858, 746)
+				memberDeleted:=false
+			;}
 		}
 
 		;Recieve Reward
@@ -507,6 +606,12 @@ Return
 		;Back from National Arena Contest
 		if(clickWhen(988, 809, 0x56422E, 480, 266))
 			continue
+		;Back from starlight
+		if(clickWhen(851, 642, 0xEA4CF8, 480, 266))
+			continue
+		;Back from arcade
+		if(clickWhen(575, 791, 0xFE5DEA, 480, 266))
+			continue
 
 		;Credit score prompt
 		PixelGetColor, color, 757, 490 , RGB
@@ -534,7 +639,7 @@ Return
 		}
 
 		;Continue statistic
-		If (isColor(1452, 296, 0xCE2B48)){
+		If (isColor(483, 813, 0x27588A)&&isColor(1161, 380, 0x959096)){
 			match:=match+1
 			follow()
 			commendEveryone()
@@ -668,9 +773,16 @@ Return
 		;Close dialog gmail login
 		if(clickWhen(554, 703, 0x808080, 958, 956))
 			continue
-		;Back from inventory
-		if(clickWhen(1072, 241, 0x5FBCE4, 475, 270))
+		;Close blazing west event
+		if(isColor(1400, 323, 0xD6C69D)){
+			Send {Esc}
 			continue
+		}
+		;Back from inventory
+		if(isColor(1072, 241, 0x5FBCE4)){
+			Send {Esc}		
+			continue
+		}
 		;Close not responding nox
 		if(clickWhen(483, 856, 0x282828, -1, -1)){
 			if(clickWhen(603, 792, 0xEAEAEA, 0, 0))	
@@ -682,18 +794,31 @@ Return
 		;Close mayhem mode dialog
 		if(clickWhen(1470, 306, 0x7CCAFF, 0, 0))
 			continue
+		;Close super lucky star dialog
+		if(isColor(871, 763, 0x8EB754)){
+			Send {Esc}
+			continue
+		}
 	}
 Return
 #IfWinActive
 
+
+drag(sx, sy, dx, dy){
+	MouseMove sx, sy
+	SetMouseDelay 15
+	MouseClickDrag, Left, sx, sy, dx, dy
+	SetMouseDelay -1
+}
+
 followAndRemoveMember(){
-	followMembers()
+	;followMembers()
 	removeMember(1441, 745)
 	removeMember(1444, 670)
 	removeMember(1445, 616)
 	removeMember(1444, 554)
 	removeMember(1445, 489)
-	removeMember(1443, 430)
+	;removeMember(1443, 430)
 }
 
 followMembers(){
@@ -824,13 +949,13 @@ hasEnemy(){
 			hasEnemy := verifyHealthBar(Px, Py)
 		}	
 	}
-	;if(!hasEnemy){
-	;	;Third, front of player
-	;	PixelSearch, Px, Py, 718, 194, 1292, 749, %enemyColor%, %sensitivity%, Fast
-	;	If !ErrorLevel{ 
-	;		hasEnemy := verifyHealthBar(Px, Py)
-	;	}	
-	;}
+	if(!hasEnemy){
+		;Third, front of player
+		PixelSearch, Px, Py, 718, 83, 1387, 749, %enemyColor%, %sensitivity%, Fast
+		If !ErrorLevel{ 
+			hasEnemy := verifyHealthBar(Px, Py)
+		}	
+	}
 
 	return hasEnemy
 }

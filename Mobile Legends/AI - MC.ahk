@@ -25,7 +25,7 @@ Return
 	SoundBeep 350, 100
 	while(aiEnabled){	
 		Sleep 1000
-		;Start game
+		;MC Start game
 		if(isColor(1312, 718, 0xFFD065)){
 			if(mcPlayRemaining<=0){
 				click(495, 258)

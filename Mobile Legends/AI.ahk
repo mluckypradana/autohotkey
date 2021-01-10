@@ -1,4 +1,3 @@
-global winRemaining:=4
 global sensitivity:=4
 global brawlMatch:=false
 global memberDeleted:=false
@@ -6,7 +5,18 @@ global memberSorted:=false
 global withSquadInvite:=false
 global withGroupInvite:=true
 global withDeleteMember:=true
+
 global withArena:=true
+global winRemaining:=4
+
+global withMc:=true
+global lineupSelected:=true
+global mcPlayRemaining:=20
+global minRefresh:=2
+global maxRefresh:=2
+global round:=0
+global maxRound:=20
+
 aiEnabled:=true
 attack:=true
 watchAds:=false
@@ -109,7 +119,6 @@ Return
 
 		;[Done] Close dialog invite 
 		If (isColor(1142,592, 0xA07D5A) || isColor(837, 688, 0x0D2136) || isColor(835, 676, 0x0B1B2C) || isColor(839, 679, 0x0C1E31)){
-			takeScreenshot()
 			click(839, 683)
 			click(841, 610)
 			Sleep 300
@@ -192,7 +201,113 @@ Return
 			}
 		}
 
-		;----------------------------------
+		;-------------------------------------
+
+		if(withMc){
+			;MC Start game
+			if(isColor(1312, 718, 0xFFD065)){
+				if(mcPlayRemaining<=0){
+					click(495, 258)
+					Sleep 500
+				}
+				else{
+					click(1312, 718)
+					Sleep 3000
+				}
+				Continue
+			}
+
+			;Enter match
+			if(isColor(1052, 737, 0xB6955F)){
+				click(1052, 737)
+				lineupSelected:=false
+				continue
+			}
+
+			;Pick item
+			if(isColor(821, 416, 0x3D6798)){
+				click(1236, 410)
+				click(673, 411)
+				click(759, 323)
+				click(890, 323)
+				click(1024, 337)
+				click(1167, 335)
+			}
+
+			;Recommend lineup showup
+			if(isColor(1461, 292, 0x6FB8EC)){
+				click(716, 532)
+				Sleep 500
+				click(1459, 294)
+				Sleep 500
+				lineupSelected:=true
+				delete3Heroes()
+				continue
+			}
+		
+			;In inventory
+			if(isColor(1436, 1038, 0x1F598D)||isColor(1445, 1027, 0x83F5FD)){
+				;Recommend lineup first time
+				if(!lineupSelected){
+					; openInventory()			
+					recommendLineup()
+					delete3Heroes()
+					lineupSelected:=true
+				}
+				buyOrRefresh()
+			}
+
+			;Pick item from monster / include item
+			if(isColor(468, 199, 0xFC0E28)){
+				if(isColor(510, 588, 0x275079)){
+					assignItems()
+				}
+				else{
+					click(520, 79)
+					click(520, 141)
+					click(517, 207)
+					click(449, 218)
+				}
+				continue
+			}
+
+			;Eliminated
+			if(isColor(1089, 791, 0x447FC9)){
+				click(1089, 791)	
+				continue
+			}
+
+			;Tally up rank
+			if(isColor(520, 485, 0xFFFFAC)){
+				click(965, 791)
+				continue
+			}
+			
+			;MC Rank summary
+			if(isColor(1434, 792, 0xBD945B)){
+				click(1434, 792)
+				continue
+			}
+
+			;MC Statistic
+			if(isColor(461, 807, 0xA0CEFF) && isColor(1371, 819, 0xB4895F)){
+				click(1390, 817)
+				mcPlayRemaining:=mcPlayRemaining-1
+				continue
+			}
+			
+			;MC Add more slot
+			if(isColor(452, 1036, 0x4A9AC4)){
+				click(486, 1012)
+				continue
+			}
+			
+			;Close MC Competition
+			if(isColor(1195, 657, 0xFFFF5C)){
+				click(1412, 364)
+			}
+		}
+		;--------------------------------------
 
 		;[Done]
 		;In match
@@ -251,7 +366,12 @@ Return
 
 		;If on main menu and not finding match
 		if(isColor(1397, 247, 0xA7B9D8) && isColor(922, 241, 0x74A8B4)) {
-			if(withDeleteMember && !memberDeleted){
+			if(withMc && mcPlayRemaining>0){
+				click(973, 719)	
+				Sleep 1000
+				click(1281, 371)
+			}
+			else if(withDeleteMember && !memberDeleted){
 				click(1319, 401)
 			}else
 				click(959, 550)
@@ -802,7 +922,130 @@ Return
 	}
 Return
 #IfWinActive
+assignItems(){
+;Assign item base
+	click(509, 91)
+	Sleep 500
+	click(697, 315)
+	Sleep 500
+	;Assign item 1
+	click(594, 89)
+	Sleep 500
+	click(698, 161)
+	Sleep 500
+	;Assign item 2
+	click(592, 144)
+	Sleep 500
+	click(698, 236)
+	Sleep 500
+	;Assign item 3
+	click(598, 213)
+	Sleep 500
+	click(696, 87)
+	Sleep 500
 
+	click(450, 81)
+}
+buyOrRefresh(){
+	Sleep 1500
+	round:=round+1
+	Loop %minRefresh% {
+		;Always refresh if round > 11 || Refresh when no hero bought and has deposit 2
+		if(round>11 || (!isHeroBought() && isColor(1431, 17, 0xF4ECAA)))
+			clickRefresh()
+	}
+	isHeroBought()
+
+	;Refresh more by deposit 4
+	refresh:=0
+	if(isColor(1464, 16, 0xF8ECA9))
+		refresh:=2
+	Loop %refresh% {
+		isHeroBought()
+		clickRefresh()
+	}
+	isHeroBought()
+	
+	;Close inventory
+	click(1436, 1007)
+	Sleep 500
+	click(456, 654)
+}
+clickRefresh(){
+	click(1438, 523)
+	Sleep 600
+}
+isHeroBought(){
+	buy:=false
+	;1
+	if(isColor(653, 442, 0xFFFFFF)){
+		buy:=true
+		click(653, 442)
+		Sleep 600
+	}
+	;2
+	if(isColor(830, 441, 0xFFFFFF)){
+		buy:=true
+		click(830, 441)
+		Sleep 600
+	}
+	;3
+	if(isColor(1005, 441, 0xFFFFFF)){
+		buy:=true
+		click(1005, 441)
+		Sleep 600
+	}
+	;4
+	if(isColor(1181, 441, 0xFFFFFF)){
+		buy:=true
+		click(1181, 441)
+		Sleep 600
+	}
+	;5
+	if(isColor(1356, 439, 0xFFFFFF)){
+		buy:=true
+		click(1356, 439)
+		Sleep 600
+	}
+	return buy
+}
+
+recommendLineup(){
+	click(461, 598)
+	Sleep 1000
+	click(475, 414)
+	Sleep 1000
+	click(1386, 628)
+	Sleep 1000
+
+	;Close lineup
+	click(1464, 295)
+	Sleep 500
+
+	round:=0
+}
+
+openInventory(){
+	click(1436, 1007)
+}
+
+delete3Heroes(){
+	click(681, 703)
+	Sleep 500
+	deleteHero()
+	click(767, 732)
+	Sleep 500
+	deleteHero()
+	click(846, 733)
+	Sleep 500
+	deleteHero()
+	openInventory()
+}
+
+deleteHero(){
+	click(485, 409)
+	Sleep 500
+}
 
 drag(sx, sy, dx, dy){
 	MouseMove sx, sy

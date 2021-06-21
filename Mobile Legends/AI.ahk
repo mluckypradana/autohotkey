@@ -2,22 +2,13 @@ global sensitivity:=4
 global brawlMatch:=false
 global memberDeleted:=false
 global memberSorted:=false
-global withSquadInvite:=false
-global withGroupInvite:=true
-global withDeleteMember:=true
+global firstGroupManaged:=false
+global secondGroupManaged:=false
+global withSquadInvite:= false
+global withGroupInvite:= false
+global withDeleteMember:= false
 
-global withArena:=true
-global winRemaining:=4
-
-global withMc:=true
-global lineupSelected:=true
-global mcPlayRemaining:=20
-global minRefresh:=2
-global maxRefresh:=2
-global round:=0
-global maxRound:=20
-
-aiEnabled:=true
+aiEnabled:= true
 attack:=true
 watchAds:=false
 arenaColor:=0x000000
@@ -27,33 +18,9 @@ match:=0
 ads:=0
 maxAds:=10
 
-y := 1006
-xs := []
-xs[0] := 692
-xs[1] := 783
-xs[2] := 883
-xy := []
-xy[0,0] := 671
-xy[0,1] := 575
-xy[1,0] := 745
-xy[1,1] := 682
-xy[2,0] := 699
-xy[2,1] := 456
-xy[3,0] := 785
-xy[3,1] := 589
-xy[4,0] := 865
-xy[4,1] := 725
-xy[5,0] := 778
-xy[5,1] := 485
-xy[6,0] := 892
-xy[6,1] := 648
-xy[7,0] := 781
-xy[7,1] := 381
-xy[8,0] := 883
-xy[8,1] := 537
-xy[9,0] := 1017
-xy[9,1] := 713
-
+#Include _AI - Close Dialogs.ahk
+#Include _AI - Arena.ahk
+#Include _AI - MC.ahk
 #Include __Basic.ahk
 #IfWinActive BlueStacks
 !,::
@@ -65,60 +32,13 @@ Return
 !.::
 	aiEnabled:=true
 	SoundBeep 350, 100
-	if(getDayOfWeek()==1||getDayOfWeek()==2){
-	;	withDeleteMember:=false
-	;	withGroupInvite:=false
-	}
 	while(aiEnabled){	
 		;Defaults
 		;if(clickWhen(, , )) continue
 		Sleep 1000
 
-		;Close fake serial number idm
-		if(clickWhen(707, 440, 0xFCE100, 1202, 625))
-			continue
-		;Close idm registration
-		if(clickWhen(702, 341, 0x4B82E5,1149, 675))
-			continue
-
-		;Close idm 
-		if(clickWhen(789, 534, 0xFCE100, 1149, 477)) 
-			continue	
-		;Close idm 
-		if(clickWhen(791, 544, 0xFCE100, 1146, 485)) 
-			continue
-		;Close idm
-		if(clickWhen(832, 590, 0xFCE100, 1193, 528))
-			continue
-		;Close idm
-		if(clickWhen(767, 616, 0xFCE100, 1257, 691))
-			continue
-		
-		;[Done] Get gold chest
-		if(clickWhen(613, 345, 0xD74D61, 581, 373)) {
-			Sleep 1000
-			continue
-		}
-		;[Done] Get free chest
-		if(clickWhen(612, 450, 0xB8384A, 580, 477)) {
-			Sleep 1000
-			continue
-		}
-		;Get confim chest
-		if(clickWhen(682, 531, 0x12842f, 0, 0)) 
-			continue
-		;Confirm info chest
-		if(clickWhen(960, 713, 0xD99F69, 0, 0)) 
-			continue
-		;Draft pick pager
-		if(clickWhen(1427, 545, 0x8CA6CE, 0, 0)) 
-			continue
-		;Close webview
-		if(clickWhen(1349, 814, 0xA9A9A9, 0, 0))
-			continue
-
 		;[Done] Close dialog invite 
-		If (isColor(1142,592, 0xA07D5A) || isColor(837, 688, 0x0D2136) || isColor(835, 676, 0x0B1B2C) || isColor(839, 679, 0x0C1E31)){
+		If (isColor(1142,592, 0xA07D5A)|| isColor(837, 688, 0x0D2136) || isColor(835, 676, 0x0B1B2C) || isColor(839, 679, 0x0C1E31)){
 			click(839, 683)
 			click(841, 610)
 			Sleep 300
@@ -127,187 +47,11 @@ Return
 			Continue
 		}
 
-		;------------------------------------Arena match
-		if(withArena){
-			;Start arena match
-			if(isColor(873, 655, 0xD9AE49)){
-				;Click victory reward
-				click(1416, 361)
-				Sleep 500
-				click(1235, 364)
-				Sleep 1500
-				
-				if(winRemaining>0){
-					click(967, 669)			
-				}
-				;Click back
-				else{
-					click(457, 259)
-				}
-				continue
-			}
+		if(isWithArena(withArena))
+			continue
+		if(isWithMc())
+			continue
 
-			;Close reward info
-			if(isColor(755, 363, 0x1F3C59) && isColor(1237, 361, 0xC9B288)){
-				click(1238, 360)
-				continue
-			}
-
-			;Recieve reward
-			if(isColor(1013, 753, 0xBC8E61)){
-				click(1013, 753)
-				continue
-			}
-
-			;Obtain new card
-			if(isColor(1049, 771, 0xB98F62)){
-				click(962, 755)
-				continue
-			}
-
-			;Close match
-			if(isColor(1462, 799, 0xADD9FA)){
-				;Win arena			
-				if(!isColor(979, 535, 0x767A7A)){
-					winRemaining:=winRemaining-1
-				}
-				click(967, 795)
-				continue
-			}
-
-			;In match
-			if(isColor(952, 207, 0x4D8777)){
-				if(targetIndex > 6){
-					heroIndex := rand(0, 9)
-					drag(1050, y, xy[heroIndex][0],  xy[heroIndex][1])
-					Sleep 100
-					heroIndex := rand(0, 9)
-					drag(1145, y, xy[heroIndex][0],  xy[heroIndex][1])
-					Sleep 100
-					heroIndex := rand(0, 9)
-					drag(1238, y, xy[heroIndex][0],  xy[heroIndex][1])
-					Sleep 100
-				}	
-				targetIndex := rand(0, 9)
-				drag(xs[0], y, xy[targetIndex][0],  xy[targetIndex][1])
-				Sleep 100
-				targetIndex := rand(0, 9)
-				drag(xs[1], y, xy[targetIndex][0],  xy[targetIndex][1])
-				Sleep 100
-				targetIndex := rand(0, 9)
-				drag(xs[2], y, xy[targetIndex][0],  xy[targetIndex][1])
-				Sleep 100
-				continue
-			}
-		}
-
-		;-------------------------------------
-
-		if(withMc){
-			;MC Start game
-			if(isColor(1312, 718, 0xFFD065)){
-				if(mcPlayRemaining<=0){
-					click(495, 258)
-					Sleep 500
-				}
-				else{
-					click(1312, 718)
-					Sleep 3000
-				}
-				Continue
-			}
-
-			;Enter match
-			if(isColor(1052, 737, 0xB6955F)){
-				click(1052, 737)
-				lineupSelected:=false
-				continue
-			}
-
-			;Pick item
-			if(isColor(821, 416, 0x3D6798)){
-				click(1236, 410)
-				click(673, 411)
-				click(759, 323)
-				click(890, 323)
-				click(1024, 337)
-				click(1167, 335)
-			}
-
-			;Recommend lineup showup
-			if(isColor(1461, 292, 0x6FB8EC)){
-				click(716, 532)
-				Sleep 500
-				click(1459, 294)
-				Sleep 500
-				lineupSelected:=true
-				delete3Heroes()
-				continue
-			}
-		
-			;In inventory
-			if(isColor(1436, 1038, 0x1F598D)||isColor(1445, 1027, 0x83F5FD)){
-				;Recommend lineup first time
-				if(!lineupSelected){
-					; openInventory()			
-					recommendLineup()
-					delete3Heroes()
-					lineupSelected:=true
-				}
-				buyOrRefresh()
-			}
-
-			;Pick item from monster / include item
-			if(isColor(468, 199, 0xFC0E28)){
-				if(isColor(510, 588, 0x275079)){
-					assignItems()
-				}
-				else{
-					click(520, 79)
-					click(520, 141)
-					click(517, 207)
-					click(449, 218)
-				}
-				continue
-			}
-
-			;Eliminated
-			if(isColor(1089, 791, 0x447FC9)){
-				click(1089, 791)	
-				continue
-			}
-
-			;Tally up rank
-			if(isColor(520, 485, 0xFFFFAC)){
-				click(965, 791)
-				continue
-			}
-			
-			;MC Rank summary
-			if(isColor(1434, 792, 0xBD945B)){
-				click(1434, 792)
-				continue
-			}
-
-			;MC Statistic
-			if(isColor(461, 807, 0xA0CEFF) && isColor(1371, 819, 0xB4895F)){
-				click(1390, 817)
-				mcPlayRemaining:=mcPlayRemaining-1
-				continue
-			}
-			
-			;MC Add more slot
-			if(isColor(452, 1036, 0x4A9AC4)){
-				click(486, 1012)
-				continue
-			}
-			
-			;Close MC Competition
-			if(isColor(1195, 657, 0xFFFF5C)){
-				click(1412, 364)
-			}
-		}
-		;--------------------------------------
 
 		;[Done]
 		;In match
@@ -332,9 +76,10 @@ Return
 			while(isAllowMove()){
 				if(attackWhenHasEnemy())
 					break
+
+				Send 45321
 				Send {Up down}{Right down}
 				Send g ;{space}
-				Send 45321
 				Send g ;{space}
 				Send {Right up}
 				Sleep 210
@@ -365,44 +110,52 @@ Return
 		}
 
 		;If on main menu and not finding match
-		if(isColor(1397, 247, 0xA7B9D8) && isColor(922, 241, 0x74A8B4)) {
-			if(withMc && mcPlayRemaining>0){
-				click(973, 719)	
-				Sleep 1000
-				click(1281, 371)
-			}
-			else if(withDeleteMember && !memberDeleted){
-				click(1319, 401)
+		if(isColor(925, 245, 0x4EB2DE)) {
+			if(withDeleteMember && !secondGroupManaged){
+				if(!firstGroupmanaged)
+					click(1319, 401)
+				else{
+					memberDeleted:=false
+					click(1317, 492)
+				}
 			}else
 				click(959, 550)
 			continue
 		}
 
 		;Click group setting & type something
-		if(clickWhen(619, 307, 0xAEC2DC, -1, -1)){
+		if(isColor(620, 306, 0xB0C4DD)){
 			click(620, 315)
 			continue
 		}
 
 		;If is in group members
-		if(isColor(458, 277, 0xDDA601)){
+		if(isColor(458, 277, 0xDDA601)||isColor(452, 262, 0xAE360B)){
 				if(memberDeleted){
 					click(1443, 265)
 					Sleep 500
 					click(1422, 267)
 					memberSorted:=false
+
+					if(!firstGroupManaged)
+						firstGroupManaged:=true
+					else if(!secondGroupManaged)
+						secondGroupManaged:=true
 					continue
 				}
 				if(!isFullMember()){
 					memberDeleted:=true
+					click(526, 657)
+					Sleep 500
+					click(513, 557)
 					continue
 				}
 				if(memberSorted){
 					;Delete member
 					if(!memberDeleted && !isColor(1344, 492, 0x529457)){
 						followAndRemoveMember()
-						followAndRemoveMember()
-						followAndRemoveMember()
+						;followAndRemoveMember()
+						;followAndRemoveMember()
 					}
 					memberDeleted:=true
 					continue
@@ -421,9 +174,8 @@ Return
 			continue
 		;If brawlMatch, pick brawl match in battle type
 		
-
 		;[Done] If in battle type pick AI
-		if(clickWhen(1323, 325, 0xD8962E, -1, -1)){
+		if(isColor(1344, 613, 0xE09E33)){
 			if(brawlMatch)
 				click(559, 693)
 			else
@@ -456,127 +208,21 @@ Return
 			;Pick Okay
 			click(1394, 809)
 			Continue
-		}	
-
-		;-------------------------------------------------- Ads
-		if(watchAds && ads<maxAds){
-			;Resume Video
-			PixelGetColor, color, 1179, 709, RGB
-			If (equal(color,0x3F81F7)<4){
-				click(1179, 709)
-				ads:=ads-1
-				Sleep 7000
-				Continue
-			}
-
-			;If allowed to click(close video (If no time remaining and close button is exists)
-			PixelGetColor, color, 1365,6, RGB
-			PixelGetColor, closeColor, 1460,39, RGB
-			If (equal(color,0x010001)>4 && equal(closeColor, 0x4C4C4F)<4){
-				click(1460,39)
-				ads:=ads+1
-				Continue
-			}
-
-
-			;(Another) If allowed to click(close video
-			PixelGetColor, color, 993,578, RGB
-			PixelGetColor, closeColor, 1463,55, RGB
-			If (equal(color,0x3C4043)>4 && equal(closeColor, 0x3C4043)<4){
-				click(1460,39)
-				ads:=ads+1
-				Continue
-			}
-			;
-
-			;(Another) If allowed to click(close video
-			PixelGetColor, infoColor, 440, 1059 , RGB
-			If (equal(infoColor, 0x00AECD)<4){
-				click(1460,39)
-				ads:=ads+1
-				Continue
-			}
-
-			;Receive reward
-			if(clickWhen(1030,730, 0xAB845D,1030,730))
-				Continue
-
-			;View video
-			if(clickWhen(1030,730, 0xAB845D,1030,730))
-			PixelGetColor, color, 1452, 286, RGB
-			If (equal(color,0x84CFFF)<4){
-				click(1452,286)
-				Continue
-			}
 		}
-		;----------------------------------------------------
-
-
 		
 		;If not connected
 		if(clickWhen(1093, 655, 0xAF855D, 1097, 671))
 			continue
-		;Close reason dialog invite
-		if(clickWhen(762, 557, 0x3EDAFF, 960, 679))
+		;Network connection failed
+		if(isColor(896, 397, 0x7A8EB6)&&isColor(1160, 665, 0xAC845D)){
+			click(1082, 652)
 			continue
-		;Close dialog event fullscreen
-		if(clickWhen(1415, 306, 0x7BC8FE, 0, 0))
-			continue
-		;Close dialog purchase event
-		if(clickWhen(1352, 338, 0x7174B4, 0, 0))
-			continue
-		;[Done] Close dialog event fullscreen
-		if(clickWhen(1415, 306, 0x7CCBFF, 1415, 306))
-			continue
-		;Close dialog 7-day daily login
-		if(clickWhen(1373, 290, 0x74819C, 0, 0)||clickWhen(1374, 300, 0x677791, 0, 0))
-			continue
-		;Close dialog daily event
-		if(clickWhen(1376, 329, 0x7DCDFF, 1376, 329)) 
-			continue
-		;[Done] Close dialog event
-		if(clickWhen(1151, 252, 0xF3DF7A, 1376, 327)) 
-			continue
-		;[Done] Close dialog event
-		if(clickWhen(962, 745, 0xDCA26A, 962, 745)) 
-			continue
-		;[Done] Close dialog event
-		if(clickWhen(1425, 322, 0x83D3E4, 0, 0))
-			continue
-
-		;Close dialog webview
-		PixelGetColor, color, 990, 601, RGB
-		If (equal(color,0xe4e4e4)<4){
-			click(990, 601)
-			Continue
-		}
-		;Close dialog popup
-		PixelGetColor, color, 1042, 198, RGB
-		If (equal(color,0xb0b6da)<4){
-			click(1042, 198)
-			Continue
-		}
-		;Close dialog chat
-		PixelGetColor, color, 1048, 167, RGB
-		If (equal(color,0xafb5d8)<4){
-			click(1048, 167)
-			Continue
-		}
-		;Close small dialog chat
-		if(clickWhen(889, 583, 0x99AAD3, 1216, 393))
-			continue
-
-		;CLose dialog buy hero
-		PixelGetColor, color, 977, 212, RGB
-		If (equal(color,0xafb5d9)<4){
-			click(977, 212)
-			Continue
 		}
 		
 		;[Done] Start game
 		if(clickWhen(760, 729, 0xE7B075, -1, -1)){
 			;Prevent start game when not AI
-			;if(!isColor(738, 261, 0x35CC0B)&&!isColor(739, 261, 0x17E400)){
+			;if(!isColor(739, 260, 0x17E700)){
 			;	click(470, 260)
 			;}			
 			;else{
@@ -589,12 +235,10 @@ Return
 					}
 					click(1065, 723)
 					sleep 900
-					click(1065, 723)
-					sleep 900
-					click(1065, 723)
-					sleep 900
-					;Click Player Mastery
-					click(919, 691)
+					;Click black eldian
+					;click(975, 724)
+					;Click invite all
+					click(976, 763)
 					Sleep 500
 					click(545, 448)
 					click(545, 448)
@@ -603,6 +247,8 @@ Return
 				}
 				click(858, 746)
 				memberDeleted:=false
+				firstGroupManaged:=false
+				secondGroupManaged:=false
 			;}
 		}
 
@@ -631,10 +277,7 @@ Return
 			Continue
 		}
 
-		;[Done]
-		; 
 		;Match up delay
-		
 		PixelGetColor, color, 1043, 651, RGB
 		If (equal(color,0xDCA16A)<4){
 			click(1043, 651)
@@ -723,15 +366,6 @@ Return
 			click(959, 814)
 			Continue
 		}
-		;Back from National Arena Contest
-		if(clickWhen(988, 809, 0x56422E, 480, 266))
-			continue
-		;Back from starlight
-		if(clickWhen(851, 642, 0xEA4CF8, 480, 266))
-			continue
-		;Back from arcade
-		if(clickWhen(575, 791, 0xFE5DEA, 480, 266))
-			continue
 
 		;Credit score prompt
 		PixelGetColor, color, 757, 490 , RGB
@@ -747,8 +381,6 @@ Return
 			Sleep 5000
 			Continue
 		}
-		
-		;
 
 		;Continue bp collected 2
 		PixelGetColor, color, 1360, 819 , RGB
@@ -790,278 +422,40 @@ Return
 			Continue
 		}
 
-		;Back button
-		PixelGetColor, color, 1044, 587, RGB
-		If (color==0x34c947||color==0x34c846){
-			click(1044, 587)
-			Continue
-		}
-
-		;Close MCL
-		PixelGetColor, color, 1416, 353, RGB
-		If (equal(color,0x663D87)<4){
-			click(1416, 353)
-			Continue
-		}
-		;Close recharge season page
-		if(clickWhen(1336, 292, 0x6A7198, 0, 0))
+		if(closeDialogs())
 			continue
-
-		;[Done] recharge page
-		PixelGetColor, color, 1386, 350, RGB
-		If (equal(color,0x7CCCFF)<4){
-			click(1386, 350)
-			Continue
-		}
-
-		;[Done] Close 515 Party Popup
-		PixelGetColor, color, 936, 794, RGB
-		If (equal(color,0xFFA931)<4){
-			click(1248, 341)
-			Continue
-		}
-		
-		;[Done] MCL Streaming close
-		PixelGetColor, color, 1331, 258, RGB
-		If (equal(color,0xAFB7D8)<4){
-			click(1331, 258)
-			Continue
-		}
-		;Exit game guardian
-		if(clickWhen(1299, 396, 0x424242, 0, 0))
-			continue
-		;Close recharge diamond
-		if(clickWhen(1385, 352, 0x7DCEFF, 0, 0))
-			continue
-		;Close rules
-		if(clickWhen(1073, 784, 0xDCAD77, 0, 0))
-			continue
-		;Close invitation reason
-		if(clickWhen(984, 682, 0xB2C3D6, 0, 0))
-			continue
-		;Close eudora dialog
-		if(clickWhen(1276, 364, 0x97DEE5, 0, 0))
-			continue
-		;Close live section
-		if(clickWhen(1466, 255, 0x3C7FA6, 477, 262))
-			continue
-		;Close credit score decreasing dialog
-		if(clickWhen(849, 606, 0xBF2417, 964, 739))
-			continue
-		;Back from arcade
-		if(clickWhen(1344, 497, 0xA07D5A, 475, 261))
-			continue
-		;Back from profile
-		if(clickWhen(727, 317, 0xE31D35, 478, 263))
-			continue
-		;Back from live stream
-		if(clickWhen(1377, 256, 0x3B549E, 478, 263))
-			continue
-		if(isColor(542, 267, 0xB09570) && isColor(459, 255, 0xFFE0AD)){
-			click(478, 263)
-			continue
-		}
-		;Close Conquest of Dawn dialog
-		if(clickWhen(1478, 377, 0x7CCDFF, 0, 0))
-			continue
-		;Close watch live stream dialog
-		if(clickWhen(626, 638, 0xA07D5A, 1344, 324))
-			continue
-		;Close nostalgia dialog
-		if(clickWhen(1387, 318, 0x7DCEFF, 0, 0))
-			continue
-		;Close celestial level up
-		if(clickWhen(961, 375, 0xE035E9, 964, 800))
-			continue
-		;Close permanent skin dialog
-		if(clickWhen(1399, 314, 0x876947, 0, 0))
-			continue
-		;Close tutorial hero mastery
-		if(clickWhen(953, 727, 0xEBECEC, 661, 819)){
-			restartMobileLegends()
-			continue
-		}
-		;Close chat dialog
-		if(clickWhen(537, 804, 0x6DBFF1, 1422, 268))
-			continue
-		;Close intro dialog
-		if(clickWhen(1039, 730, 0xAC8A5D, 0, 0))
-			continue
-		;Close update finished dialog
-		if(clickWhen(1041, 636, 0x998160, 0, 0))
-			continue
-		;Close dialog gmail login
-		if(clickWhen(554, 703, 0x808080, 958, 956))
-			continue
-		;Close blazing west event
-		if(isColor(1400, 323, 0xD6C69D)){
-			Send {Esc}
-			continue
-		}
-		;Back from inventory
-		if(isColor(1072, 241, 0x5FBCE4)){
-			Send {Esc}		
-			continue
-		}
-		;Close not responding nox
-		if(clickWhen(483, 856, 0x282828, -1, -1)){
-			if(clickWhen(603, 792, 0xEAEAEA, 0, 0))	
-				continue
-		}
-		;Close event dialog project
-		if(clickWhen(1470, 316, 0x7CCAFF, 0, 0))
-			continue
-		;Close mayhem mode dialog
-		if(clickWhen(1470, 306, 0x7CCAFF, 0, 0))
-			continue
-		;Close super lucky star dialog
-		if(isColor(871, 763, 0x8EB754)){
-			Send {Esc}
-			continue
-		}
 	}
 Return
+
+;Spam buy MC enabled
+!+,::
+	stopSpamBuyMc()
+Return
+!+.::
+	loopSpamBuyMc()
+Return
 #IfWinActive
-assignItems(){
-;Assign item base
-	click(509, 91)
-	Sleep 500
-	click(697, 315)
-	Sleep 500
-	;Assign item 1
-	click(594, 89)
-	Sleep 500
-	click(698, 161)
-	Sleep 500
-	;Assign item 2
-	click(592, 144)
-	Sleep 500
-	click(698, 236)
-	Sleep 500
-	;Assign item 3
-	click(598, 213)
-	Sleep 500
-	click(696, 87)
-	Sleep 500
-
-	click(450, 81)
+stopSpamBuyMc(){
+	spamBuyMcEnabled:=false
+	SoundBeep 350, 100
 }
-buyOrRefresh(){
-	Sleep 1500
-	round:=round+1
-	Loop %minRefresh% {
-		;Always refresh if round > 11 || Refresh when no hero bought and has deposit 2
-		if(round>11 || (!isHeroBought() && isColor(1431, 17, 0xF4ECAA)))
-			clickRefresh()
+loopSpamBuyMc(){
+	spamBuyMcEnabled:=true
+	SoundBeep 350, 100
+	while(spamBuyMcEnabled){
+		if(!buyHeroesInInventoryIfExists())
+			deleteHeroesInSlotIfExists()
 	}
-	isHeroBought()
-
-	;Refresh more by deposit 4
-	refresh:=0
-	if(isColor(1464, 16, 0xF8ECA9))
-		refresh:=2
-	Loop %refresh% {
-		isHeroBought()
-		clickRefresh()
-	}
-	isHeroBought()
-	
-	;Close inventory
-	click(1436, 1007)
-	Sleep 500
-	click(456, 654)
-}
-clickRefresh(){
-	click(1438, 523)
-	Sleep 600
-}
-isHeroBought(){
-	buy:=false
-	;1
-	if(isColor(653, 442, 0xFFFFFF)){
-		buy:=true
-		click(653, 442)
-		Sleep 600
-	}
-	;2
-	if(isColor(830, 441, 0xFFFFFF)){
-		buy:=true
-		click(830, 441)
-		Sleep 600
-	}
-	;3
-	if(isColor(1005, 441, 0xFFFFFF)){
-		buy:=true
-		click(1005, 441)
-		Sleep 600
-	}
-	;4
-	if(isColor(1181, 441, 0xFFFFFF)){
-		buy:=true
-		click(1181, 441)
-		Sleep 600
-	}
-	;5
-	if(isColor(1356, 439, 0xFFFFFF)){
-		buy:=true
-		click(1356, 439)
-		Sleep 600
-	}
-	return buy
-}
-
-recommendLineup(){
-	click(461, 598)
-	Sleep 1000
-	click(475, 414)
-	Sleep 1000
-	click(1386, 628)
-	Sleep 1000
-
-	;Close lineup
-	click(1464, 295)
-	Sleep 500
-
-	round:=0
-}
-
-openInventory(){
-	click(1436, 1007)
-}
-
-delete3Heroes(){
-	click(681, 703)
-	Sleep 500
-	deleteHero()
-	click(767, 732)
-	Sleep 500
-	deleteHero()
-	click(846, 733)
-	Sleep 500
-	deleteHero()
-	openInventory()
-}
-
-deleteHero(){
-	click(485, 409)
-	Sleep 500
-}
-
-drag(sx, sy, dx, dy){
-	MouseMove sx, sy
-	SetMouseDelay 15
-	MouseClickDrag, Left, sx, sy, dx, dy
-	SetMouseDelay -1
 }
 
 followAndRemoveMember(){
-	;followMembers()
-	removeMember(1441, 745)
-	removeMember(1444, 670)
-	removeMember(1445, 616)
-	removeMember(1444, 554)
+	followMembers()
+	;removeMember(1441, 745)
+	;removeMember(1444, 670)
+	;removeMember(1445, 616)
+	;removeMember(1444, 554)
 	removeMember(1445, 489)
-	;removeMember(1443, 430)
+	removeMember(1443, 430)
 }
 
 followMembers(){
@@ -1094,6 +488,8 @@ followMember(y){
 }
 
 removeMember(cx, cy){
+	click(cx, cy)
+	Sleep 100
 	click(cx, cy)
 	Sleep 500
 	click(1101, 673)
@@ -1129,7 +525,7 @@ restartMobileLegends(){
 }
 
 !^d::
-	followMembers()
+	isHeroBought()
 Return
 
 halfRetreat(){

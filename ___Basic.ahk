@@ -25,6 +25,8 @@ clickL(cx, cy){
 }
 
 click(cx, cy){
+	;msgbox %cx%
+	;msgbox %cy%
 	MouseGetPos x, y
 	Click %cx%, %cy%
 	MouseMove x, y
@@ -45,11 +47,11 @@ clickWhen(px, py, pcolor, cx, cy){
 }
 
 coorX(x){
-	return A_ScreenWidth  * x / actualScreenX
+	return x ; A_ScreenWidth  * x / actualScreenX
 }
 
 coorY(y){
-	return A_ScreenHeight  * y / actualScreenY
+	return y ; A_ScreenHeight  * y / actualScreenY
 }
 
 
@@ -62,6 +64,10 @@ takeScreenshot(){
 isColor(px, py, pcolor) {
 	PixelGetColor, color, %px%, %py%, RGB
 	return equal(color, pcolor)<4
+}
+isColorS(px, py, pcolor, sensitivity) {
+	PixelGetColor, color, %px%, %py%, RGB
+	return equal(color, pcolor)<sensitivity
 }
 
 global detectorX:=0
@@ -147,13 +153,6 @@ Return
 	Send {Volume_down}
 Return
 
-
-#1::
-	WinGetClass, Clipboard, A
-	WinGetTitle, Title, A
-	MsgBox, The active window is "%Title%".
-Return
-
 +!^Up::moveMouse(0, -1)
 +!^Down::moveMouse(0, 1)
 +!^Left::moveMouse(-1, 0)
@@ -216,4 +215,11 @@ getDayOfWeek(){
 rand(v1, v2){
 	Random, value, v1, v2
 	return value
+}
+
+drag(sx, sy, dx, dy){
+	MouseMove sx, sy
+	SetMouseDelay 15
+	MouseClickDrag, Left, sx, sy, dx, dy
+	SetMouseDelay -1
 }

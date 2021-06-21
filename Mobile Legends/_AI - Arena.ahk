@@ -1,14 +1,7 @@
-global sensitivity:=4
-global brawlMatch:=false
-global memberDeleted:=false
-global memberSorted:=false
-global withSquadInvite:=false
-global withGroupInvite:=true
-global withDeleteMember:=true
-aiEnabled:=false
+global withArena:=true
+global winRemaining:=4
 
-global winRemaining:=1
-y = 1005
+y := 1006
 xs := []
 xs[0] := 692
 xs[1] := 783
@@ -35,89 +28,78 @@ xy[8,1] := 537
 xy[9,0] := 1017
 xy[9,1] := 713
 
-Esc::ExitApp
-
-#Include __Basic.ahk
-#IfWinActive BlueStacks
-!,::
-	aiEnabled:=false
-	SoundBeep 350, 100
-Return
-
-;Auto accept + Auto attack
-!.::
-	aiEnabled:=true
-	SoundBeep 350, 100
-	while(aiEnabled){	
-		Sleep 1000
-
-		;Click chest
-		if(isColor(1391, 383, 0xFFFFF7)){
-			click(1417, 363)
-			Sleep 1000
-			continue
-		}
-			
+isWithArena(withArena){
+	if(withArena){
 		;Start arena match
 		if(isColor(873, 655, 0xD9AE49)){
-			if(winRemaining>0)
-				click(967, 669)
+			;Click victory reward
+			click(1416, 361)
+			Sleep 500
+			click(1235, 364)
+			Sleep 1500
+			
+			if(winRemaining>0){
+				click(967, 669)			
+			}
 			;Click back
-			else
+			else{
 				click(457, 259)
-			continue
+			}
+			return true
+		}
+
+		;Close reward info
+		if(isColor(755, 363, 0x1F3C59) && isColor(1237, 361, 0xC9B288)){
+			click(1238, 360)
+			return true
 		}
 
 		;Recieve reward
 		if(isColor(1013, 753, 0xBC8E61)){
 			click(1013, 753)
-			continue
+			return true
 		}
 
 		;Obtain new card
 		if(isColor(1049, 771, 0xB98F62)){
 			click(962, 755)
-			continue
+			return true
 		}
 
 		;Close match
 		if(isColor(1462, 799, 0xADD9FA)){
-			;Defeat			
-			if(isColor(979, 535, 0x767A7A)){
+			;Win arena			
+			if(!isColor(979, 535, 0x767A7A)){
 				winRemaining:=winRemaining-1
 			}
 			click(967, 795)
-			continue
+			return true
 		}
 
 		;In match
 		if(isColor(952, 207, 0x4D8777)){
-			Random, targetIndex, 0, 9
-			Random, slotIndex, 0, 2
 			if(targetIndex > 6){
-				Random, heroIndex, 0, 9
+				heroIndex := rand(0, 9)
 				drag(1050, y, xy[heroIndex][0],  xy[heroIndex][1])
-				Sleep 500
+				Sleep 100
+				heroIndex := rand(0, 9)
 				drag(1145, y, xy[heroIndex][0],  xy[heroIndex][1])
-				Sleep 500
+				Sleep 100
+				heroIndex := rand(0, 9)
 				drag(1238, y, xy[heroIndex][0],  xy[heroIndex][1])
-				Sleep 500
+				Sleep 100
 			}	
+			targetIndex := rand(0, 9)
 			drag(xs[0], y, xy[targetIndex][0],  xy[targetIndex][1])
-			Sleep 500
+			Sleep 100
+			targetIndex := rand(0, 9)
 			drag(xs[1], y, xy[targetIndex][0],  xy[targetIndex][1])
-			Sleep 500
+			Sleep 100
+			targetIndex := rand(0, 9)
 			drag(xs[2], y, xy[targetIndex][0],  xy[targetIndex][1])
-			Sleep 500
-			continue
+			Sleep 100
+			return true
 		}
 	}
-Return
-#IfWinActive
-
-drag(sx, sy, dx, dy){
-	MouseMove sx, sy
-	SetMouseDelay 15
-	MouseClickDrag, Left, sx, sy, dx, dy
-	SetMouseDelay -1
+	return false
 }

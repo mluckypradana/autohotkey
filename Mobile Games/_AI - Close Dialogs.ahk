@@ -19,13 +19,6 @@ closeDialogs(){
 	;Close idm
 	if(clickWhen(767, 616, 0xFCE100, 1257, 691))
 		return true
-
-	;Dismiss calendar
-	if(clickWhen(1378, 659, 0x26ACE9, 1786, 903))
-		return true
-	;Dismiss calendar meeting
-	if(clickWhen(1482, 723, 0x1798E1, 1863, 981))
-		return true
 	
 	;Dismiss game guardian
 	if(clickWhen(1409, 726, 0x424242, 0, 0))
@@ -89,5 +82,20 @@ closeDialogs(){
 	;Close MC dialog
 	if(clickWhen(1437, 291, 0xBADCFB, 0, 0))
 		return true
+	;Close MC dialog
+	if(clickWhen(1439, 292, 0xBAE0F5, 0, 0))
+		return true
+	;Close purchase dialog
+	if clickWhen(1371, 346, 0xCFAD6B, 0, 0)
+		return true
+	;Close playstore dialog
+	if c(937, 291, 0x1E7D49) && c(960, 313, 0x00E26B) {
+		click(1358, 370)
+		return true
+	}
+	;Close all kind of dialog
+	if c(1396, 818, 0x06070B) {
+		escape()
+	}
 	return false
 }

@@ -1,5 +1,5 @@
 #Include ../___Basic.ahk
-
+#IfWinActive ahk_exe studio64.exe
 
 #!l::
 	FileRead, Clipboard, _LinearLayout.txt
@@ -31,4 +31,21 @@ Return
 +#b::
 	Send {Enter}
 	Send tools:srcCompat="@tools:sample/backgrounds/scenic"
+Return
+
+;Toggle camel snake case to camel case
+#c::
+	untapButtons()
+	Loop, 5{
+		Send +!u
+	}
+	untapButtons()
+Return
+
+#LButton::
+	Send !{left}
+Return
+
+#RButton::
+	Send !{right}
 Return

@@ -34,11 +34,3 @@ Return
 e::
 	drag(1238, 1004)
 Return
-
-drag(dx, dy){
-	MouseGetPos x, y
-	MouseMove dx, dy
-	SetMouseDelay 10
-	MouseClickDrag, Left, dx, dy, x, y
-	SetMouseDelay -1
-}

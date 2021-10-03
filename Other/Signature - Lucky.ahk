@@ -17,7 +17,7 @@ init(){
 }
 
 ;Draw
-!d::
+!/::
 	init()
 	click Down
 	draw(346, 420)

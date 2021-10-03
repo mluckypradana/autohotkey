@@ -1,9 +1,16 @@
 ;AI In Game
-#Include ../____Mandatory.ahk
+#SingleInstance force
+CoordMode, Mouse, Screen
+CoordMode, Tooltip, Screen
+CoordMode, Pixel, Screen
+SetCapsLockState, AlwaysOff
+setmousedelay -1
+setkeydelay -1
 global sensitivity:=4
 loop(){
 	;In match
-	while(isAllowMove()){
+	if(isAllowMove()){
+
 		;Surender
 		if(clickWhen(526, 281, 0xDCA26A, 0, 0))
 			Return
@@ -16,38 +23,59 @@ loop(){
 		}
 
 		;[Done] Move player
-		saveLastWindow()
-		focusAppWindow()
+		saveFocusWindow()
 		Send {Up down}{Right down}
+		;focusLastWindow()
+
 		while(isAllowMove()){
 			if(attackWhenHasEnemy())
 				break
-
+			saveFocusWindow()
 			Send 45321
 			Send {Up down}{Right down}
 			Send g ;{space}
 			Send g ;{space}
 			Send {Right up}
+			focusLastWindow()
+
 			Sleep 210
+			
 			if(attackWhenHasEnemy())
 				break
+			
+			saveFocusWindow()
 			Send g ;{space}
 			Send {Right down}
+			;focusLastWindow()
+
 			Loop, 7{
 				Sleep 100
+				saveFocusWindow()
 				Send g ;{space}
+				;focusLastWindow()
 			}
 			if(attackWhenHasEnemy())
 				break
 			if(stuckAtRight()){
+				saveFocusWindow()
 				Send {Up down}{Right up}
+				;focusLastWindow()
+				
 				Sleep 3000
+				
+				saveFocusWindow()
 				Send {Up up}{Right up}
+				;focusLastWindow()
 			}
 		}
+		saveFocusWindow()
 		Send {Up up}{Right up}
-		focusLastWindow()
+		;focusLastWindow()
 	}
+}
+saveFocusWindow(){
+	saveLastWindow()
+	focusAppWindow()
 }
 
 
@@ -56,6 +84,7 @@ attackWhenHasEnemy(){
 		attack()
 		halfRetreat()
  		retreat()
+ 		tooltip("Has enemy")
 		return true	
 	}
 	else
@@ -68,27 +97,38 @@ stuckAtRight(){
 }
 
 halfRetreat(){
-	saveLastWindow()
-	focusAppWindow()
 	MouseGetPos x, y
 	MouseMove 640, 948
+	saveFocusWindow()
 	Send {c down}
+	;focusLastWindow()
+
 	Sleep 250
+
+	saveFocusWindow()
 	Send {c up}
+	;focusLastWindow()
+
 	MouseMove x, y
-	focusLastWindow()
 }
 
 retreat(){
-	saveLastWindow()
-	focusAppWindow()
+	saveFocusWindow()
 	Send {Up up}{Right up}
 	Send {Down down}{Left down}
+	;focusLastWindow()
+
 	Sleep 1900
+
+	saveFocusWindow()
 	Send {Down down}{Left up}
+	;focusLastWindow()
+
 	Sleep 200
+
+	saveFocusWindow()
 	Send {Down up}{Left up}
-	focusLastWindow()
+	;focusLastWindow()
 }
 
 isNotDead(){
@@ -164,72 +204,93 @@ isLowHealth(){
 }
 
 backToBase(){
-	saveLastWindow()
-	focusAppWindow()
+	saveFocusWindow()
 	Send {Up up}{Right up}{Down up}{Left up}
 	Send cc
+	;focusLastWindow()
 	Sleep 8500
-	focusLastWindow()
 }
 
 
 attack(){
-	saveLastWindow()
-	focusAppWindow()
+	saveFocusWindow()
 	Send {Up up}{Right up}
 	Send +{r}
+	;focusLastWindow()
+
 	Sleep, 400
 	Loop 2{
 		Loop, 1{
-			Send s
-			Send f
+			saveFocusWindow()
+			Send sf
+			;focusLastWindow()
+
 	    	Sleep, 200
 		}
+		
+		saveFocusWindow()
 		Send vvv
+		;focusLastWindow()
+		
 		Loop, 4{
-			Send a
-			Send f
+			saveFocusWindow()
+			Send af
+			;focusLastWindow()
+
 	    	Sleep, 200
 		}
 		Loop, 3{
-			Send d
-			Send f
+			saveFocusWindow()
+			Send df
+			;focusLastWindow()
+
 	    	Sleep, 200
 		}
+		saveFocusWindow()
 		Send +{r}
+		;focusLastWindow()
 	}
-	focusLastWindow()
 }
 
 ;[Done]
 isAllowMove(){
-	;PixelGetColor, deadColor, 969, 48, RGB
-	PixelGetColor, batteryColor, 625, 11, RGB
-	allowMove :=equal(batteryColor,0x00F900)<4 ;&& deadColor!=0xFE2619
-	return allowMove
+	return c(627, 11, 0x00F900) && !c(962, 696, 0x9E3626)
 }
 
 leaveBase(){
-	saveLastWindow()
-	focusAppWindow()
+	saveFocusWindow()
 	Send {Up up}{Right up}
 	Send {Up down}{Right down}
+	;focusLastWindow()
+
 	x := 0
 	while(x<5){
 		;Move a bit
+		saveFocusWindow()
 		Send {Up up}{Right down}
+		;focusLastWindow()
+
 		Sleep 100
+
+		saveFocusWindow()
 		Send {Up down}{Right down}
+		;focusLastWindow()
 
 		Sleep 600
+
+		saveFocusWindow()
 		Send {space}
+		;focusLastWindow()
+
 		x := x+1
 	}
+
+	saveFocusWindow()
 	Send {Up up}{Right up}
-	focusLastWindow()
+	;focusLastWindow()
 }
 
 while(true)
 	loop()
 !p::ExitApp
-#Include __Basic.ahk
+#Include __Functions.ahk

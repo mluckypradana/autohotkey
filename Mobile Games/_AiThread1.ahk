@@ -15,8 +15,10 @@ global secondGroupManaged:=false
 global withSquadInvite:= false
 global withGroupInvite:= true
 global withDeleteMember:= true
+global withAutoShutdown:= true
+
 isFullMember(){
-	return c(1460, 821, 0x5C77A3)
+	return c(1454, 816, 0x8AA1D0)
 }
 loop(){
 	;Back to lobby
@@ -32,7 +34,12 @@ loop(){
 	}
 
 	;If on main menu and not finding match
-	if(c(1311, 505, 0xDEA500)&&c(1048, 243, 0xF6EE93)) {
+	if c(914, 255, 0x53B2D9) && c(1121, 260, 0x4165F9) {
+		if withAutoShutdown && getCurrentHour() == 5 {
+			runCommand("shutdown /s /f")
+			return
+		}
+
 		;Click return to lobby if already in lobby
 		if(clickWhen(922, 737, 0x4F8BE4, 0, 0)) 
 			Return
@@ -49,18 +56,16 @@ loop(){
 		Return
 	}
 
-	;Click group setting & type something
-	if(isColor(620, 306, 0xB0C4DD)){
-		click(620, 315)
-		Return
-	}
+	;Click group setting
+	if clickWhen(443, 357, 0x789CB9, 0, 0)
+		return
 
-	;If is in group members
-	if(isColor(458, 277, 0xDDA601)||isColor(452, 262, 0xAE360B)){
+	;If is in group members (close button & trash button)
+	if c(1442, 272, 0xF4F7FA) && c(1443, 419, 0x9DACD3) {
 		if(memberDeleted){
-			click(1443, 265)
-			Sleep 500
-			click(1423, 265)
+			escape()
+			pixelWait(882, 811, 0x4874B3)
+			escape()
 			memberSorted:=false
 
 			if(!firstGroupManaged)
@@ -71,8 +76,9 @@ loop(){
 		}
 		if(!isFullMember()){
 			memberDeleted:=true
-			click(526, 657)
-			waitClick(506, 576, 0x25629C)
+			;Invite via public
+			;click(546, 759)
+			;waitClick(506, 576, 0x25629C)
 			Return
 		}
 		if(memberSorted){
@@ -98,14 +104,11 @@ loop(){
 	;If brawlMatch, pick brawl match in battle type
 	
 	;[Done] If in battle type pick AI
-	if(isColor(1344, 613, 0xE09E33)){
+	if c(631, 278, 0x62DAE4){
 		if(brawlMatch)
 			click(559, 693)
 		else
 			click(839, 697)
-		Sleep 1500
-		click(973, 726)
-		
 		Return
 	}
 
@@ -116,20 +119,8 @@ loop(){
 	}
 
 	;[Done] In picker
-	PixelGetColor, color, 1491, 811, RGB
-	PixelGetColor, equipmentColor, 1318, 680, RGB
-	If (equal(color,0x424242)<4 && equal(equipmentColor,0x81E1EB)>4){
-		;Expand picker
-		click(1275, 518)
-		Sleep 200
-		;Pick Roger
-		click(1180, 249)
-		Sleep 200
-		click(1005, 440)
-		Sleep 200
-		;Pick Okay
-		click(1394, 809)
-		Return
+	If c(867, 670, 0x09B8E1){
+		click(952, 781)
 	}
 	
 	;If not connected
@@ -143,29 +134,18 @@ loop(){
 	}
 	
 	;[Done] Start game
-	if(clickWhen(856, 766, 0xD6A668, -1, -1)){
-		;Prevent start game when not AI
-		;if(!isColor(739, 260, 0x17E700)){
-		;	click(470, 260)
-		;}			
-		;else{
-			if(withGroupInvite){
-				click(1061, 812)
-				if(withSquadInvite)
-					waitClick(1058, 699, 0x2B5087)
-				waitClick(1023, 736, 0x25477A) ;Click group invite
-				waitClick(862, 756, 0x1D3866) ;Invite all
-				pixelWait(1112, 723, 0x0E1C32)
-				Loop 6{
-					click(1067, 840)
-				}
-				sleep 10000
-			}
-			click(858, 746)
-			memberDeleted:=false
-			firstGroupManaged:=false
-			secondGroupManaged:=false
-		;}
+	if c(769, 745, 0xA08968) {	
+		if(withGroupInvite){
+			if(withSquadInvite)
+				waitClick(1288, 704, 0x7CADD6)
+			click(1471, 707) ;Click group invite
+			waitClick(1469, 824, 0x4A6592) ;Invite all
+			sleep 10000
+		}
+		click(755, 745)
+		memberDeleted:=false
+		firstGroupManaged:=false
+		secondGroupManaged:=false
 	}
 
 	;Recieve Reward
@@ -180,10 +160,8 @@ loop(){
 	}
 
 	;[Done] Accept  (Enter)
-	If (c(845, 769, 0xBF9E65)){
-		click(845, 769)
+	If clickWhen(863, 743, 0x9A8673, 0, 0)
 		Return
-	}
 
 	;[Done] Accept Game Ramadhan
 	PixelGetColor, color, 801, 432, RGB
@@ -238,15 +216,20 @@ loop(){
 		Return
 
 	;[Done] Return summary graph
-	PixelGetColor, color, 451, 803 , RGB
-	If (equal(color,0xAAC3E1)<4){
+	If c(1285, 806, 0xA0876B) {
 		click(1359, 802)
 		Return
 	}
 
 	;[Done] Return Achievement
-	If c(1463, 745, 0x294E77) && c(1469, 809, 0xA9825C) {
-		click(1469, 809)
+	If c(1334, 809, 0x9F876B) {
+		click(1406, 809)
+		return true
+	}
+
+	;Match rate record
+	if c(1360, 814, 0x3954A1) && c(1477, 829, 0x57B962) {
+		click(1291, 742)
 		return true
 	}
 
@@ -271,6 +254,12 @@ loop(){
 		Return
 	}
 
+	;Match up prompt
+	if c(1207, 391, 0xF9FAFC){
+		click(957, 679)
+		return
+	}
+
 	;Return bp collected
 	PixelGetColor, color, 790, 584, RGB
 	If (equal(color,0x138830)<4){
@@ -288,7 +277,7 @@ loop(){
 	}
 
 	;Return statistic
-	If (isColor(483, 813, 0x27588A)&&isColor(1161, 380, 0x959096)){
+	If c(1463, 813, 0x4B6794) {
 		match:=match+1
 		follow()
 		commendEveryone()
@@ -302,6 +291,13 @@ loop(){
 	if(clickWhen(815, 376, 0x6F7F94, -1, -1)){
 		follow()
 		commendEveryone()
+		
+		;Is daily follow already limited
+		pixelWait(964, 509, 0x181822)
+		if c(964, 509, 0x181822){
+			Msgbox Daily Follow Limited
+			ExitApp
+		}
 		Return
 	}
 
@@ -315,15 +311,26 @@ loop(){
 	;Rate
 	PixelGetColor, color, 967, 421, RGB
 	If (equal(color,0xF5DCED)<4){
-		click(1100, 443)
+		clickWhen(738, 681, 0x4C6793, 0, 0)
+		Return
+	}
+
+	;Close cancel matchmaking dialog
+	if c(739, 682, 0x4C6895) {
+		escape()
 		Return
 	}
 
 	;Close all kind of dialog
-	if c(1396, 818, 0x06070B)
-	|| c(1478, 251, 0x011509) {
+	if c(1464, 275, 0x011509) {
 		escape()
 		tooltip("Close all kind of dialog")
+	}
+
+	;Back from someone's channel
+	if c(1263, 269, 0x4461F1) && hasBackButton() {
+		click(460, 257)
+		return
 	}
 
 	;Close dialog game guardian
@@ -331,8 +338,16 @@ loop(){
 		click(559, 820)
 		return true
 	}
-}
 
+	;Back from arcade game
+	if c(1419, 261, 0xA4B5D7) && c(969, 332, 0x77CAFE) {
+		back()
+		return true
+	}
+}
+hasBackButton(){
+	return c(461, 254, 0xFFE1AE)
+}
 followAndRemoveMember(){
 	followMembers()
 	;removeMember(1441, 745)
@@ -345,22 +360,22 @@ followAndRemoveMember(){
 
 followMembers(){
 	;1
-	if c(627, 442, 0xC15E88)
+	if c(627, 447, 0xECA4E8)
 		followMember(406)
 	;2
-	if c(627, 509, 0xD35189)
+	if c(627, 509, 0xE99EE5)
 		followMember(470)
 	;3
-	if c(627, 572, 0xE45591)
+	if c(627, 572, 0xE69BE1)
 		followMember(537)
 	;4
-	if c(627, 634, 0xE15994)
+	if c(626, 634, 0xF8AFF3)
 		followMember(597)
 	;5
-	if c(627, 697, 0xDD5690)
+	if c(627, 698, 0xE69EE2)
 		followMember(660)
 	;6
-	if c(627, 760, 0xD9538C)
+	if c(627, 761, 0xE396DE)
 		followMember(720)
 	Sleep 200
 }
@@ -372,12 +387,11 @@ followMember(y){
 }
 removeMember(cx, cy){
 	click(cx, cy)
-	pixelWait(1095, 690, 0xDDA26A)
-	PixelGetColor color, 1095, 692, RGB
-	clickWhen(1095, 692, 0xDAA069, 0, 0)
+	waitClick(1023, 679, 0xA0886B)
 	Sleep 200
 }
 while(true)
 	loop()
 !p::ExitApp
+
 #Include __Basic.ahk

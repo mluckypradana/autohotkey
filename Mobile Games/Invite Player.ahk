@@ -24,11 +24,13 @@ maxAds:=10
 
 #\::ExitApp
 
-;Auto accept + Auto attack
+;Zoom 50
 #z::
 	click(231, 674)
-	click(254, 676)
-	click(242, 672)
+	Sleep 100
+	click(263, 673)
+	Sleep 100
+	click(215, 679)
 Return
 
 #x::
@@ -36,7 +38,7 @@ Return
 	found:=0
 	maxFound:=10
 	while(foundCheckBox){
-		PixelSearch, px, py, 301, 469, 352, 655, 0xFFFFFF, 0, RGB Fast
+		PixelSearch, px, py, 279, 522, 352, 655, 0xFFFFFF, 0, RGB Fast
 		If !ErrorLevel{
 			click(px, py)
 			Sleep 75

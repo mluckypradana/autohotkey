@@ -1,34 +1,42 @@
 ;Arena match
-#Include ../____Mandatory.ahk
+#SingleInstance force
+CoordMode, Mouse, Screen
+CoordMode, Tooltip, Screen
+CoordMode, Pixel, Screen
+SetCapsLockState, AlwaysOff
+setmousedelay -1
+setkeydelay -1
+
 global winRemaining:=5
-global y := 1006
-global xs := []
-xs[0] := 692
-xs[1] := 783
-xs[2] := 883
-global xy := []
-xy[0,0] := 671
-xy[0,1] := 575
-xy[1,0] := 745
-xy[1,1] := 682
-xy[2,0] := 699
-xy[2,1] := 456
-xy[3,0] := 785
-xy[3,1] := 589
-xy[4,0] := 865
-xy[4,1] := 725
-xy[5,0] := 778
-xy[5,1] := 485
-xy[6,0] := 892
-xy[6,1] := 648
-xy[7,0] := 781
-xy[7,1] := 381
-xy[8,0] := 883
-xy[8,1] := 537
-xy[9,0] := 1017
-xy[9,1] := 713
 
 loop(){
+	global y := 1006g
+	global xs := []
+	xs[0] := 692
+	xs[1] := 783
+	xs[2] := 883
+	global xy := []
+	xy[0,0] := 671
+	xy[0,1] := 575
+	xy[1,0] := 745
+	xy[1,1] := 682
+	xy[2,0] := 699
+	xy[2,1] := 456
+	xy[3,0] := 785
+	xy[3,1] := 589
+	xy[4,0] := 865
+	xy[4,1] := 725
+	xy[5,0] := 778
+	xy[5,1] := 485
+	xy[6,0] := 892
+	xy[6,1] := 648
+	xy[7,0] := 781
+	xy[7,1] := 381
+	xy[8,0] := 883
+	xy[8,1] := 537
+	xy[9,0] := 1017
+	xy[9,1] := 713
+
 	;In match
 	if(c(962, 984, 0x373E5F)){
 			targetIndex := rand(0, 9)
@@ -91,7 +99,7 @@ loop(){
 	}
 
 	;Close match
-	if c(921, 805, 0x7C8387) {
+	if c(1449, 801, 0x184567) {
 		;Win arena			
 		if(!c(971, 534, 0x9FA0A0)){
 			winRemaining:=winRemaining-1
@@ -106,4 +114,4 @@ loop(){
 while(true)
 	loop()
 !p::ExitApp
-#Include __Basic.ahk
+#Include __Functions.ahk

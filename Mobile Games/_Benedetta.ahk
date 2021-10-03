@@ -10,16 +10,17 @@ setkeydelay -1
 global spaceEnabled:=true
 
 loop(){
-	if (c(936, 483, 0xD42E2E) || c(938, 519, 0xDB2D2D)) {
+	if spacePressed()	
+		if c(936, 483, 0xD42E2E) || c(938, 519, 0xDB2D2D)
 		toggleSpace()
-	}
+	
 }
 toggleSpace(){
 	Send {Space up}
 	Sleep 200
-	tooltip("Released: " . spacePressed())
+	;tooltip("Released: " . spacePressed())
 	Send {Space down}
-	Sleep 1000
+	;Sleep 1000
 }
 
 while(true)

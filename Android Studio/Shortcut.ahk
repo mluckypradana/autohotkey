@@ -1,4 +1,5 @@
 #Include ../___Basic.ahk
+
 #IfWinActive ahk_exe studio64.exe
 
 #!l::
@@ -45,7 +46,34 @@ Return
 #LButton::
 	Send !{left}
 Return
-
+#MButton::
+	closeTab()
+Return
 #RButton::
 	Send !{right}
 Return
+#Space::
+	autoFormat()
+	Send !^{F10}
+	Send +{F12}
+Return
+#x::
+	closeTab()
+Return
+runDetekt(){
+	Send !{F12}
+	pixelWait(1886, 912, 0x3C3F41)
+	Send gradlew detekt{Enter}
+	Sleep 100
+	Send +{Esc}
+}
+autoFormat(){
+	Send !^l
+	Send !^o
+}
+closeTab(){
+	autoFormat()
+	Send ^{F4}
+}
+
+#IfWinActive

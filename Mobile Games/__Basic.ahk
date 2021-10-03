@@ -6,36 +6,34 @@ SetCapsLockState, AlwaysOff
 setmousedelay -1
 setkeydelay -1
 #Include __Functions.ahk
+#Include ../___Basic.ahk
+
 
 >!\::ExitApp
 >!/::
 	;Debug
-	drag(1093, 393, 1079, 805)
 Return
-
 ;Disable assist
 >!>+,::
-	closeThreads(2, "_Thread")
-	closeThread("_Benedetta")
+	closeThreads(9, "_Thread")
 	tooltip("Assist stopped")
 Return
 ;Assist
 >!,::
-	runThreads(2, "_Thread")
-	runThread("_Benedetta")
+	runThreads(9, "_Thread")
 	tooltip("Assist started")
 Return
 ;Thumbs up apprentice
 >!;::
 	thumbsUpEnabled:=true
 	beep()
-	while(thumbsUpEnabled){	
-		if(c(921, 657, 0x112742) && c(830, 583, 0x99AAD3)){
-			click(1083, 660) ;Check
-			pixelWaitTime(1176, 324, 0x3C3C3C, 5000)
+	while(thumbsUpEnabled){
+		if c(940, 716, 0x375881){
+			click(1037, 714) ;Check
+			pixelWait(1408, 696, 0x60758C)
 			;Like
-			click(1440, 621)
-			click(1440, 621)
+			click(1443, 606)
+			click(1443, 606)
 			escape()
 		}
 	}
@@ -46,16 +44,13 @@ Return
 Return
 
 ;Use bundle inventory
->!'::
-	useChestEnabled:=true
-	beep()
-	while(useChestEnabled){	
-		useBundleInventory()
-	}
-Return
 >!>+'::
-	useChestEnabled:=false
-	beep()
+	closeThread("_ThreadUseInventory")
+	tooltip("Use inventory stopped")
+Return
+>!'::
+	runThread("_ThreadUseInventory")
+	tooltip("Use inventory started")
 Return
 
 >!>+e::
@@ -69,23 +64,16 @@ Return
 	}
 Return
 clickAd(){
-	if(c(557, 261, 0xE7C893) && c(600, 264, 0xF4CC91)){
-		clickWhen(1293, 610, 0xB63648, 0, 0) ;Click daily ad
-		if(clickWhen(1291, 610, 0xB63749, 0, 0)) ;Click daily supply Free button
-		clickWhen(1396, 652, 0xB9394B, 0, 0) ;Click grand collection free chest
-	}
-	clickWhen(794, 464, 0xCC16C6, 1037, 704) ;Click daily supply start Free button
-	clickWhen(973, 542, 0xD21ACF, 1142, 747) ;Click daily supply watch videos
-	;Click daily ad progress start button
-	if(c(1354, 317, 0x7CCEFF) && c(1135, 663, 0xD89152))
-		click(956, 746)
-	;Click daily ad start button
-	if(c(686, 350, 0x787A6C) && c(896, 752, 0x925368))
-		click(896, 752)
-	;Click Ad Reward watch button
-	if(c(1136, 643, 0xFDF9BB) && c(923, 746, 0xB88C60)){
-		clickAndSaveWindow(965, 764)
-		;waitAndEscape()
+	clickWhen(1290, 608, 0xD15967, 0, 0) ; daily supply Free
+	clickWhen(794, 462, 0xCB14CC, 964, 710) ; daily supply Free button
+	clickWhen(974, 541, 0xC410C4, 1128, 755) ; daily supply watch videos
+	clickWhen(1180, 644, 0xF8E1A4, 957, 744) ; daily supply watch button
+	clickWhen(1405, 72, 0xBCBDCC, 0, 0) ; Tap to skip
+	clickWhen(661, 760, 0x9CF7FE, 1349, 731) ; Watch video chest
+	if c(1172, 500, 0xF1E09C) { ;Free Lucky Draw
+		if(clickWhen(1285, 553, 0xE0BF75, 0, 0)){ ;Draw
+			waitClick(750, 681, 0x4D6996)
+		}
 	}
 }
 #IfWinActive BlueStacks
@@ -109,41 +97,49 @@ Return
 	click(921, 437)
 	click(485, 34)
 Return
-
+;Increase volume
 !F2::
 	;If in game
-	if(c(633, 42, 0xADC1DC)){
-		clickWhen(632, 41, 0xADC1DA, 0, 0)
-		pixelWait(587, 533, 0x162F4C)
-		click(560, 524)
-		pixelWait(892, 534, 0x234586)
-		click(1092, 468)
+	if c(626, 45, 0xA6B8D8){
+		click(633, 55)
+		pixelWait(1396, 295, 0xF8F9FB)
+		click(556, 504) ;Sound
+		pixelWait(868, 414, 0x3771B6)
+		click(1088, 530) ;Sound effect
+		click(1091, 652) ;System notification
 		escape()
 	}
-	else {
-		clickWhen(1388, 243, 0xB1C5DE, 0, 0)
-		pixelWait(531, 592, 0x123B63)
-		click(528, 591)
-		pixelWait(883, 531, 0x234585)
-		click(1105, 461)
+	else if c(1420, 259, 0x82ABCE) {
+		waitClick(1419, 258, 0x82ACCF)
+		pixelWait(552, 338, 0x8CDEFF)
+		click(530, 573)
+		pixelWait(547, 577, 0x8BDDFF)
+		drag(618, 713, 620, 369)
+		pixelWait(879, 738, 0x234586)
+		click(1106, 669)
 		escape()
 	}
 Return
 !+F2::
-	if(c(633, 42, 0xADC1DC)){
-		clickWhen(632, 41, 0xADC1DA, 0, 0)
-		pixelWait(587, 533, 0x162F4C)
-		click(560, 524)
-		pixelWait(892, 534, 0x234586)
-		click(890, 469)
+	
+	;If in game
+	if c(626, 45, 0xA6B8D8){
+		click(633, 55)
+		pixelWait(1396, 295, 0xF8F9FB)
+		click(556, 504) ;Sound
+		pixelWait(868, 414, 0x3771B6)
+		click(893, 528) ;Sound effect
+		click(892, 651) ;System notification
 		escape()
 	}
 	else {
-		clickWhen(1388, 243, 0xB1C5DE, 0, 0)
-		pixelWait(531, 592, 0x123B63)
-		click(528, 591)
-		pixelWait(883, 531, 0x234585)
-		click(881, 466)
+		waitClick(1419, 258, 0x82ACCF)
+		pixelWait(552, 338, 0x8CDEFF)
+		click(530, 573)
+		pixelWait(547, 577, 0x8BDDFF) ;Wait sound
+		drag(618, 713, 620, 369)
+		pixelWait(879, 738, 0x234586)
+		click(881, 669) ;Decrease
 		escape()
 	}
 Return
@@ -155,13 +151,14 @@ Return
 		return
 	}
 	Send {F11}
-	pixelWait(1905, 655, 0x232642)
-	if clickWhen(1905, 655, 0x232642, 1903, 179){
-		waitClick(1836, 312, 0x1B1E38)
+	pixelWait(1707, 20, 0x232642)
+	if clickWhen(1707, 20, 0x232642, 1902, 150){
+		Sleep 2000
+		click(1822, 279)
 		MouseMove 1797, 239
 		Sleep 1000
-		pixelWait(1823, 292, 0x2B2E4C)
-		if c(1817, 287, 0x2B2E4C)
+		pixelWait(1842, 258, 0x2B2E4C)
+		if c(1842, 258, 0x2B2E4C)
 			Send {F11}
 	}
 Return
@@ -177,20 +174,22 @@ Return
 	pixelWait(752, 279, 0xA9835C)
 	click(700, 279)
 Return
-!1::quickChatStreamer(1019, 445)
-!2::quickChatStreamer(1050, 492)
-!3::quickChatStreamer(1046, 545)
-!4::quickChatStreamer(1032, 586)
-!5::quickChatStreamer(1023, 635)
-!6::quickChatStreamer(1011, 688)
-!q::chatDrag(1441, 348)
-!w::chatDrag(1274, 342)
-!e::chatDrag(1385, 181)
-!r::chatDrag(1363, 80)
-!t::chatDrag(1472, 67)
-!+q::iconDrag(1364, 181)
-!+w::iconDrag(1369, 277)
-!+e::iconDrag(1440, 353)
+^z::quickChatStreamer(1043, 451)
+^x::quickChatStreamer(1075, 495)
+^c::quickChatStreamer(1092, 542)
+^v::quickChatStreamer(1074, 596)
+^b::quickChatStreamer(1037, 640)
+^n::quickChatStreamer(1011, 690)
+^m::quickChatStreamer(683, 641)
+^,::quickChatStreamer(676, 689)
+^q::chatDrag(1387, 413)
+^w::chatDrag(1390, 326)
+^e::chatDrag(1388, 225)
+^r::chatDrag(1387, 133)
+^t::chatDrag(1387, 8)
+^a::iconDrag(1364, 181)
+^s::iconDrag(1369, 277)
+^d::iconDrag(1440, 353)
 ;Change target Lowest HP
 !a::
 	click(635, 54) ;Click setting
@@ -214,12 +213,11 @@ Return
 	watchLiveStream()
 Return
 watchLiveStream(){
-	pixelWait(474, 506, 0x466092)
-	click(626, 784)
+	pixelWait(921, 782, 0x4C5362)
+	click(701, 783)
 	Sleep 100
 	click(484, 263)
-	pixelWait(1106, 429, 0x113454)
-	click(484, 263)
+	escape()
 }
 !d::
 	clickWhen(859, 760, 0xA6815C, 0, 0)
@@ -272,62 +270,77 @@ Return
 ;Mute
 !x::
 	click(956, 18)
-	pixelWait(453, 258, 0x4680C5)
-	click(447, 302)
-	click(1474, 298)
+	pixelWait(1476, 257, 0xFBFCFD)
+	click(436, 333)
+	click(1484, 335)
 	escape()
 Return
 ;Chat and reply
 !c::
-	;In general chat
-	if(clickWhen(510, 749, 0x2E6CC7, 527, 776))
-		Return
-	;In profile dialog
-	if(clickWhen(829, 582, 0x9CADD5, 0, 0))
-		Return
-	
-	if(inLobby()){
-		click(705, 812)
+	;Is typing, click OK
+	if clickWhen(1427, 1003, 0xFFFFFF, 0, 0){
+		;Send
+		click(886, 807)
 		return
 	}
-	;In lobby chat
-	if(inChat() && !c(436, 970, 0xFFFFFF)){
-		click(880, 803)
+	;Has chat in dashboard
+	if clickWhen(441, 738, 0x3186C9, 0, 0)
 		return
-	}
-	;In draft pick
-	if(c(442, 811, 0x93A4C6)){
-		click(567, 811)
-		click(567, 811)
+	;Has chat in lobby
+	if clickWhen(529, 795, 0x1C996B, 613, 816)
+	;In chat dialog
+	if clickWhen(879, 811, 0x4772AF, 622, 811)
 		return
-	}
-	;In dashboard
-
-	;When texting
-	if(c(436, 970, 0xFFFFFF))
-		finishTexting()
-	
-	;Send when texting
-	if(inFriendChat())
-		click(1220, 797)
-	if(inChat())
-		click(1213, 797)
-	if(inClassicPick())
-		click(1012, 822)
-	if(inDraftPick())
-		click(652, 819)
 Return
 !v::commendEveryone()
-;Buy item (mana)
-!b::
+prioritizeAndRecommend(){
+	Sleep 100
+	click(1391, 360) ;Prioritize
+	Sleep 100
+	click(494, 342) ;Recommend
+	escape()
+}
+;Azure blade
+!1::
 	openShop()
-	clickWait(540, 429, 0x43A6F2) ;Click attack
-	click(604, 710) ;Click endless battle
+	click(549, 411) ;Attack
+	Sleep 75
+	click(605, 723) ;Click endless battle
+	Sleep 75
 	click(1386, 439) ;Click Azure blade
-	pixelWait(1366, 782, 0xF1CE13)
-	click(1400, 359) ;Prioritize
+	Sleep 75
+	prioritizeAndRecommend()
+Return
+!2::
+	openShop()
+	click(549, 599) ;Movement
+	Sleep 75
+	click(805, 326) ;Tough boots
+	prioritizeAndRecommend()
+Return
+!3::
+	openShop()
+	click(549, 474) ;Magic
+	Sleep 75
+	click(804, 435) ;NOD
+	prioritizeAndRecommend()
+Return
+!4::
+	openShop()
+	click(549, 411) ;Attack
+	Sleep 75
+	click(872, 251) ;Second type
+	Sleep 75
+	click(596, 630) ;Sea halberd
+	Sleep 75
+	click(1391, 360) ;Prioritize
+	Sleep 75
+	click(872, 251) ;Second type
+	Sleep 75
+	click(494, 342) ;Recommend
 	escape()
 Return
+
 ;Sell all item
 !+b::
 	openShop()
@@ -339,47 +352,67 @@ Return
 !Space::
 	click(1317, 716)
 Return
-;Stay in lobby
+^1::quickChat(1368, 113) ;Quick chat 2
+^2::quickChat(1373, 165) ;Quick chat 3
+^3::quickChat(1370, 218) ;Quick chat 4
+^4::quickChat(1375, 271) ;Quick chat 5
+^6::quickChat(1368, 373) ;Quick chat 7
+^5::quickChat(1372, 67) ;Quick chat 1
+^`::quickChat(1367, 322) ;Quick chat 6
+quickChat(x, y){
+	if !allowChat() 
+		return
+	Send {F4}
+	pixelWait(1439, 429, 0x4976B5)
+	click(1217, 92) ;Chat
+	click(x, y) ;Wait
+}
+allowChat(){
+	return c(1470, 214, 0x9CCBE1)
+}
+;Ignore invite
 >!F1::
-	click(1316, 715)
-	pixelWait(1248, 257, 0x0B1C2E)
-	if(c(1259, 267, 0x0B1C2F)){
-		click(1259, 267)
-		waitClick(1091, 692, 0xD99F69)
-		waitClick(460, 255, 0xFFDFAC)
+	if clickWhen(1419, 259, 0x81AACF, 0, 0) {
+		pixelWait(551, 337, 0x8CDEFF)
+		click(500, 698)
+		waitClick(958, 401, 0x385270)
+		Sleep 50
+		if clickWhen(1012, 680, 0x9C8469, 0, 0)
+			escape()
 	}
 Return
 ;Watch live stream
 >!F2::
-	click(452, 604)
-	Sleep 1000
-	pixelWait(1451, 709, 0x0C3453) ;Wait until in live
-	click(1388, 799)
-	Sleep 500
-	watchLiveStream()
-	pixelWait(1456, 666, 0x0F3353) ;Wait until in live
-	click(1131, 772)
-	Sleep 500
-	watchLiveStream()
-	waitClick(466, 253, 0xFFE1AF)
+	if clickWhen(1305, 264, 0x8DB7DB, 0, 0){
+		Sleep 2000
+		click(1445, 675)
+		watchLiveStream()
+		Sleep 2000
+		click(1242, 666)
+		watchLiveStream()
+		escape()
+	}
 Return
 ;Claim chess coin
 >!F3::
-	click(1178, 658)
+	click(970, 518) ;Match type
+	waitClick(1459, 559, 0x704868) ;Arcade
+	waitClick(1330, 379, 0x9D866C) ;MC
+	waitClick(1307, 307, 0xF9FAFC) ;Close version highlights
+
+	;Prime wheel
+	if c(509, 519, 0xBA394C) {
+		click(483, 536)
+		waitClick(456, 588, 0xF9F9C4)
+		escape()
+	}
+
+	waitClick(480, 635, 0xFFFFDD) ;Magic Competition
+	pixelWait(1150, 353, 0xFCEC7F) ;Chess coin
+	click(486, 352)
+	escape()
 	Sleep 100
-	if c(1438, 291, 0xB4DAF3){
-		escape()
-		Sleep 100
-	}
-	if c(1306, 302, 0x7CCBFF) {
-		escape()
-		Sleep 100
-	}
-	waitClick(469, 634, 0xD5A443)
-	pixelWait(1145, 359, 0xFCEC80)
-	click(487, 347)
-	click(469, 253)
-	waitClick(471, 256, 0xF0AE22)
+	escape()
 Return
 ;Manage first group
 >!F4::
@@ -412,25 +445,27 @@ Return
 Return
 ;(In preparation) buy magic dusts
 >!2::
-	if(!c(657, 328, 0x4F8FDF)) 
+	if !c(646, 333, 0xE7EDF1) 
 		return
-	click(1035, 317)
-	waitClick(695, 340, 0x396EBB) ;Buy first item
+	click(1028, 322)
+	waitClick(692, 342, 0x3B70BD) ;Buy first item
 	confirmBuyMagicDust()
-	waitClick(923, 340, 0x396EBB) ;Buy second item
+	waitClick(922, 342, 0x3B70BD) ;Buy second item
 	confirmBuyMagicDust()
-	waitClick(1149, 339, 0x396EBA) ;Buy third item
+	waitClick(1147, 341, 0x3A6FBC) ;Buy third item
 	confirmBuyMagicDust()
 	back()
 Return
+confirmBuyMagicDust(){
+	waitClick(899, 707, 0x9E866A) ;Buy
+	waitClick(1032, 666, 0x9E876A) ;Confirm
+	Sleep 300
+}
 ;Start live
 >!3::
-	if(clickWhen(452, 599, 0x8F99C7, 0, 0)){
-		waitClick(1321, 261, 0x3C7FA6)
-		Sleep 500
-		waitClick(724, 621, 0x4BB7CF)
-		Sleep 200
-		waitClick(724, 621, 0x4BB7CF)
+	if(clickWhen(1305, 265, 0x8CB6DA, 0, 0)){
+		waitClick(1280, 255, 0xACBCDE) ;Click my channel
+		waitClick(815, 602, 0x4483AA) ;Click start live stream
 	}
 ;Log exp
 >!4::
@@ -442,13 +477,14 @@ Return
 	}
 Return
 ;Leave lobby (stop ignore invite)
->!5::
-	clickWhen(1360, 315, 0x121E2F, 0, 0) ;Move to all tab 
-	pixelWait(1294, 715, 0x1C3865) ;Click friend list
-	click(1314, 719)
-	pixelWait(1250, 258, 0x0B1C2F)
-	clickWhen(1259, 270, 0x3FDEFF, 0, 0)
-	back()
+>!5::	
+	if clickWhen(1419, 259, 0x81AACF, 0, 0) {
+		pixelWait(551, 337, 0x8CDEFF)
+		click(500, 698)
+		pixelWait(553, 694, 0x8CDEFF)
+		click(788, 398)
+		escape()
+	}
 Return
 >!6::
 	if(clickWhen(477, 687, 0x1C2445, 0, 0)){
@@ -468,18 +504,33 @@ Return
 ;Unfollow friend (click trash)
 >!7::
 	MouseGetPos x, y
-	click(1447, y)
+	click(1306, y-10)
+	click(1306, y+10)
+	click(1358, y-10)
+	click(1358, y+10)
+	waitClick(1015, 681, 0x9C856A)
+	beep()
+Return
+;Use max bundle inventory
+>!8::
+	if clickWhen(1461, 730, 0x9B836A, 0, 0){
+		Sleep 100
+		if c(1117, 594, 0x356F88) {
+			waitClick(1114, 594, 0x356F88)
+			waitClick(895, 679, 0xA1896B)
+		}
+	}
 Return
 >!q::
-	if(clickWhen(1224, 820, 0x212A43, 0, 0)){
-		waitClick(658, 457, 0xFFFFFF)
-		pixelWait(1113, 521, 0xAB193C)
-		click(1215, 719)
-		pixelWait(1358, 425, 0xF2243D)
-		click(1365, 785) ;Click respond
+	if(clickWhen(1112, 814, 0xACD7FF, 0, 0)){
+		waitClick(1072, 711, 0xABD6FF)
+		waitClick(544, 699, 0xF4F4F4)
+		pixelWait(1411, 262, 0x4B6591)
+		click(1284, 721) ;Respond
 		waitClick(1239, 404, 0xFDF9EB)
-		back()
-		back()
+		escape()
+		Sleep 100
+		escape()
 	}
 Return
 ;Mentor benefit

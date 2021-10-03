@@ -6,10 +6,11 @@ CoordMode, Pixel, Screen
 SetCapsLockState, AlwaysOff
 setmousedelay -1
 setkeydelay -1
+
 global spamBuyMcEnabled:=false
 global withMc:=true
 global lineupSelected:=true
-global mcPlayRemaining:=6
+global mcPlayRemaining:=4
 global mcSurrender:=false		;Surrender part
 global minRefresh:=2
 global maxRefresh:=2
@@ -28,7 +29,7 @@ loop(){
 		}
 	}
 	;Start game
-	if(c(443, 816, 0xD5FFFF)){
+	if(c(1328, 740, 0xFFF499)){
 		if(mcPlayRemaining<=0){
 			click(495, 258)
 			pixelWait(856, 766, 0xD6A668)
@@ -63,7 +64,7 @@ loop(){
 	}
 
 	;Recommend lineup showup
-	if(isColor(1462, 293, 0x7CCAFF)){
+	if(isColor(1462, 293, 0xEDF2F6)){
 		if(mcSurrender){
 			surrenderMc()	
 			return true
@@ -112,8 +113,8 @@ loop(){
 			}	
 
 			;Assign item
-			if(isColor(468, 197, 0xFF1324)){
-				if(isColor(521, 582, 0x2E475F)){
+			if(isColor(505, 584, 0x2F465E)){ ;Is in equip menu
+				if(isColor(466, 197, 0xFF1227)){
 					assignItems()
 				}
 			}
@@ -159,7 +160,7 @@ loop(){
 	}
 
 	;MC Statistic
-	if(isColor(461, 807, 0xA0CEFF) && isColor(1371, 819, 0xB4895F)){
+	if c(460, 814, 0x9ED0FF) && c(1467, 816, 0x9B846B){
 		click(1390, 817)
 		mcPlayRemaining:=mcPlayRemaining-1
 		return true
@@ -541,4 +542,4 @@ loopSpamBuyMc(){
 while(true)
 	loop()
 !p::ExitApp
-#Include __Basic.ahk
+#Include __Functions.ahk

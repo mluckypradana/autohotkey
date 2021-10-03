@@ -3,6 +3,7 @@ CoordMode, Mouse, Screen
 CoordMode, Tooltip, Screen
 CoordMode, Pixel, Screen
 SetCapsLockState, AlwaysOff
+SetNumLockState, AlwaysOn
 setmousedelay -1
 setkeydelay -1
 
@@ -17,12 +18,24 @@ global lastWindowId:=0
 global lastX:=0
 global lastY:=0
 global currentDisplay:=1
-
+global currentDesktop:=1
 
 !Esc::
 	file:=A_ScriptDir . "\" . A_ScriptName
 	tooltip(file)
 	Run % file, , , processId
+Return
+;Hide cursor
+ScrollLock::
+if (flag := !flag) {
+   MouseGetPos, , , hwnd
+   Gui Cursor:+Owner%hwnd%
+   BlockInput MouseMove
+   DllCall("ShowCursor", Int,0)
+} else {
+   BlockInput MouseMoveOff
+   DllCall("ShowCursor", Int,1)
+}
 Return
 Capslock & /::
 	;Debug
@@ -30,19 +43,42 @@ Return
 Capslock & \::ExitApp
 
 Capslock & LButton::
+	prevDesktop()
+Return
+prevDesktop(){
 	Send ^#{Left}
-	Send {Ctrl up}
+	Send {Ctrl up}{Window up}
+}
+Capslock & RButton::
+	nextDesktop()
+Return
+nextDesktop(){
+	Send ^#{Right}
+	Send {Ctrl up}{Window up}
+}
+Capslock & F1::
+	prevDesktop()
+	prevDesktop()
+	currentDesktop:=1
 Return
 
-Capslock & RButton::
-	Send ^#{Right}
-	Send {Ctrl up}
+Capslock & F2::
+		prevDesktop()
+		prevDesktop()
+		prevDesktop()
+		nextDesktop()
+	currentDesktop:=2
+Return
+Capslock & F3::
+	nextDesktop()
+	nextDesktop()
+	currentDesktop:=3
 Return
 Capslock & e::
 	Send {Volume_up}
 Return
 Capslock & r::
-	copy()
+	copy() 
 	Process, Close, nircmd.exe
 	runCommand("nircmd speak text ~$clipboard$ 3")
 Return
@@ -56,7 +92,7 @@ Capslock & d::
 	Send {Volume_down}
 Return
 ;Toggle main display
-Capslock & g::
+Capslock & y::
 	currentDisplay := currentDisplay == 1 ? 2 : 1
 	runCommand("nircmd setprimarydisplay " . currentDisplay)
 Return
@@ -71,8 +107,8 @@ Return
 ;Streamer mode
 Capslock & s::
 	untapButtons()
-	runCommand("nircmd setdefaultsounddevice ""CABLE-B Input""")
-	runCommand("nircmd setdefaultsounddevice ""CABLE Output"" 1")
+	;runCommand("nircmd setdefaultsounddevice ""CABLE-B Input""")
+	runCommand("nircmd setdefaultsounddevice ""CABLE-B Output"" 1")
 Return
 ;Headset mode
 Capslock & q::
@@ -106,6 +142,7 @@ Capslock & Right::moveMouse(1, 0)
 
 ;Only for development========================
 Capslock & 1::
+	CoordMode, Mouse, Screen
 	MouseGetPos x, y
 	PixelGetColor, color, x, y, RGB
  	clipboard := % "c(" . x . ", " . y . ", " . color . ")"
@@ -149,28 +186,43 @@ Capslock & c::
  	tooltip(clipboard)
 return
 
-;Detect color difference
-Capslock & F1::
-	beep()
-	MouseGetPos x, y
-	PixelGetColor, color, %x%, %y%, RGB
-	detectorX:=x
-	detectorY:=y
-	detectorColor:=color
-	colorDetectorEnabled:=true
-	while(colorDetectorEnabled){
-		Sleep 1000
-		if(!isColor(detectorX, detectorY, detectorColor)){
-			beep()
-		}
+;Write date
+:R*?:~d::
+	FormatTime, CurrentDateTime,, yyyyMMdd
+	SendInput %CurrentDateTime%
+return
+;Write separator -
+:R*?:~-::
+	Loop 49{
+		Send {-}
 	}
 Return
-
-Capslock & F2::
-	colorDetectorEnabled:=false
-	beep()
+;Write separator =
+:R*?:~=::
+	Loop 25{
+		Send {=}
+	}
+Return
+;Run google chrome
+Capslock & g::
+	if WinExist("ahk_exe chrome.exe") {
+	  WinActivate
+	  ControlFocus, Chrome_AutocompleteEditView1
+	  }
+	else
+	Run, C:\Program Files\Google\Chrome Beta\Application\chrome.exe
+Return
+Capslock & h::
+	saveLastWindow()
+	if WinExist("ahk_exe chrome.exe") {
+	  WinActivate
+	  ControlFocus, Chrome_AutocompleteEditView1
+		Send {Left}
+	}
+	focusLastWindow()
 Return
 
+;=========================
 
 equal( c1, c2 ) { ; function by [VxE], return value range = [0, 441.67295593006372]
 ; that just means that any two colors will have a distance less than 442
@@ -187,28 +239,42 @@ clickL(cx, cy){
 }
 
 focusLastWindow(){
-	if(lastWindowId!=0){	
+	if(lastWindowId!=0){
 		WinGet, PID, PID, A
-		if(PID!=lastWindowId){
-			WinActivate, ahk_pid %lastWindowId%		
-			WinWait ahk_pid , lastWindowId, 3
-		}
+		if(PID!=lastWindowId)
+			WinActivate, ahk_pid %lastWindowId%
 	}
 }
 saveLastWindow(){
 	WinGet, PID, PID, A
 	lastWindowId := PID
 }
+saveLastCursor(){
+	MouseGetPos x, y
+	lastX := x
+	lastY := y
+}
+loadLastCursor(){
+	;MouseMove lastX, lastY
+	DllCall("SetCursorPos", "int", lastX, "int", lastY)
+}
 ;Click with mouse
 click(cx, cy){
+	CoordMode, Mouse, Screen
+	CoordMode, Tooltip, Screen
+	CoordMode, Pixel, Screen
+	SetCapsLockState, AlwaysOff
+	setmousedelay -1
+	setkeydelay -1
+
 	;untapMouse()
-	saveLastWindow()
 	saveLastCursor()
-	;msgbox %cx% %cy%
+	saveLastWindow()
 	;MouseMove %cx%, %cy%
 	Click %cx%, %cy%
-	loadLastCursor()
+	;tooltip(cx . ", " . cy)
 	focusLastWindow()
+	loadLastCursor()
 }
 move(x, y){
 	saveLastCursor()
@@ -294,14 +360,6 @@ rand(v1, v2){
 	Random, value, v1, v2
 	return value
 }
-saveLastCursor(){
-	MouseGetPos x, y
-	lastX := x
-	lastY := y
-}
-loadLastCursor(){
-	MouseMove lastX, lastY
-}
 drag(sx, sy, dx, dy){
 	saveLastCursor()
 	MouseMove sx, sy
@@ -383,6 +441,7 @@ closeThreads(threadTotal, prefix){
 	}
 }
 closeThread(fileName){
+	DetectHiddenWindows, On
 	file:=a_scriptdir . "\" . fileName . ".ahk"
 	tooltip(file)
 	WinClose, %file% ahk_class AutoHotkey
@@ -403,4 +462,15 @@ runThreads(threadTotal, prefix){
 		} catch e {
 		}
 	}
+}
+searchClick(x, y, x2, y2, color){
+		PixelSearch, Px, Py, %x%, %y%, %x2%, %y2%, %color%, 4, RGB Fast
+		If !ErrorLevel{
+			click(Px, Py)
+		}
+}
+getCurrentHour(){
+	FormatTime, vDate,, h m tt ;e.g. 1 1 PM
+	vHour := StrSplit(vDate, " ")[1]
+	return vHour
 }

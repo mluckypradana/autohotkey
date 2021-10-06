@@ -10,7 +10,7 @@ setkeydelay -1
 global spamBuyMcEnabled:=false
 global withMc:=true
 global lineupSelected:=true
-global mcPlayRemaining:=4
+global mcPlayRemaining:=6
 global mcSurrender:=false		;Surrender part
 global minRefresh:=2
 global maxRefresh:=2

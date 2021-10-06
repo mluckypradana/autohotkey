@@ -372,7 +372,7 @@ followMembers(){
 	if c(626, 634, 0xF8AFF3)
 		followMember(597)
 	;5
-	if c(627, 698, 0xE69EE2)
+	if c(627, 698, 0xE69EE2) || c(627, 698, 0xE9A1E6)
 		followMember(660)
 	;6
 	if c(627, 761, 0xE396DE)

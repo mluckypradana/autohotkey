@@ -166,7 +166,12 @@ Capslock & 3::
 Return
 ;Development
 Capslock & z::
-	MouseGetPos x, y
+	x:=lastX
+	y:=lastY
+	if (lastX!=0)
+		lastX:=0	
+	else
+		MouseGetPos x, y
 	PixelGetColor, color, x, y, RGB
  	clipboard := % x . ", " . y . ", " . color
  	tooltip(clipboard)
@@ -184,6 +189,13 @@ Capslock & c::
 	PixelGetColor, color, x, y, RGB
  	clipboard := % color
  	tooltip(clipboard)
+return
+;Set don't hover flag
+Capslock & v::
+	MouseGetPos x, y
+	lastX:=x
+	lastY:=y
+	beep()
 return
 
 ;Write date
@@ -474,3 +486,5 @@ getCurrentHour(){
 	vHour := StrSplit(vDate, " ")[1]
 	return vHour
 }
+
+#Include D:\Other\Hotkeys\___2nd Keyboard.ahk

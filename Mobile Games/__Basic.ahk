@@ -145,20 +145,19 @@ Return
 Return
 ;Change controller
 !F3::
-	untapButtons()
-	if c(1698, 22, 0x232642) {
+	;Back to fullscreen
+	;Exit fullscreen
+	if c(1552, 8, 0x000000) 
 		Send {F11}
-		return
-	}
-	Send {F11}
-	pixelWait(1707, 20, 0x232642)
-	if clickWhen(1707, 20, 0x232642, 1902, 150){
+	pixelWait(1510, 20, 0x232642)
+	if c(1580, 12, 0x232642){
+		click(1902, 147)
+		pixelWait(1805, 256, 0x2B2E4C)
+		click(1792, 279)
+		MouseMove 1790, 201
 		Sleep 2000
-		click(1822, 279)
-		MouseMove 1797, 239
-		Sleep 1000
-		pixelWait(1842, 258, 0x2B2E4C)
-		if c(1842, 258, 0x2B2E4C)
+		pixelWait(1814, 254, 0x2B2E4C)
+		if c(1814, 254, 0x2B2E4C)
 			Send {F11}
 	}
 Return

@@ -10,23 +10,6 @@ Space & F1::Return ; Mentioned in the hotkeys docs for UP
 
 global aiEnabled:=false
 
-!7::
-	aiEnabled:=false
-	SoundBeep 350, 100
-Return
-
-;Auto accept + Auto attack
-!8::
-	aiEnabled:=true
-	SoundBeep 350, 100	
-	while(aiEnabled){
-		pickItems()
-
-		if(c(999, 888, 0x54ECED))
-			click(1056, 933)
-		if(c(1010, 875, 0x3643B3))
-			click(968, 938)
-	}
 Return
 pickItems(){
 	;If has item in slot 3
@@ -141,45 +124,55 @@ take(index){
 	else {
 		click(1361, 139)
 	}
-}
+} 
 
 #If GetKeyState("Space", "p") ; Autohotkey_L directive for enabling following mappings when key is physically down
-
+z::click(885, 1012)
+Return
+x::click(966, 1013)
+Return
+c::click(1059, 1006)
+Return
 3::
-	click(1362, 135)
-	click(1364, 216)
-	click(1364, 296)
+	click(1355, 133)
+	click(1356, 201)
+	click(1362, 277)
 Return
-4::
-	click(1362, 135)
-Return
-5::
-	click(1364, 216)
-Return
+4::click(1356, 137)
+5::click(1364, 216)
 
-q::
-	click(1197, 71)
-Return
-w::
-	click(1239, 80)
-Return
-
-x::
-	click(978, 1003)
-Return
-c::
-	click(1058, 1012)
-Return
-v::
-	click(975, 1005)
-	click(1058, 1012)
-Return
-
+q::click(1246, 996)
+w::click(1307, 889)
 g::
 	Send {F1}
-	click(1412, 988)
-	click(978, 1003)
+	Send gxc
+	click(968, 1010)
+	click(1051, 1006)
 	Sleep 500
-	click(1058, 1012)
-	click(1427, 828)
+	click(968, 1010)
+	click(1051, 1006)
 Return
+
+
+7::
+	aiEnabled:=false
+	beep()
+Return
+
+;Auto accept + Auto attack
+8::
+	aiEnabled:=true
+	beep()
+	while(aiEnabled){
+		;If has item in slot 1
+		if c(1102, 412, 0x5C5C5B) || c(1299, 166, 0x777158) {
+			if c(1358, 124, 0x264267)
+			|| c(1378, 133, 0x1AC1E6) ;Armor2
+			|| c(1357, 149, 0x96BFD7) ;Shoes 1
+			|| c(1383, 186, 0x31312E) ;Meteor
+			|| c(1350, 133, 0xFE2867) ;Blink
+			|| c(1369, 140, 0x69DAE0) ;Hook
+			|| c(1360, 134, 0x72DEFC) ;Disguise
+					take(1)
+		}
+	}

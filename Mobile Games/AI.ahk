@@ -1,4 +1,4 @@
-Process, Close, IDMan.exe
+;AI
 #SingleInstance force
 CoordMode, Mouse, Screen
 CoordMode, Tooltip, Screen

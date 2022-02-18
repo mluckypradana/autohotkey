@@ -74,4 +74,4 @@ inDailyQuest(){
 while(true)
 	loop()
 !p::ExitApp
-#Include __Functions.ahk
+#Include __Basic.ahk

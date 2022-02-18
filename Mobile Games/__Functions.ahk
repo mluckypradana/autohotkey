@@ -1,11 +1,4 @@
-#Include ../___Basic.ahk
-#SingleInstance force
-CoordMode, Mouse, Screen
-CoordMode, Tooltip, Screen
-CoordMode, Pixel, Screen
-SetCapsLockState, AlwaysOff
-setmousedelay -1
-setkeydelay -1
+#Include D:\Other\Hotkeys\___Functions.ahk
 
 back(){
 	waitClick(463, 248, 0xFFE1AE)
@@ -27,14 +20,14 @@ clickAndSaveWindow(x, y){
 escape(){
 	saveLastWindow()
 	focusAppWindow()
-	if WinActive("BlueStacks")
+	if WinActive("ahk_exe HD-Player.exe")
 		Send {esc}
 	focusLastWindow()
 	Sleep 100
 }
 
 focusAppWindow(){
-	WinActivate BlueStacks
+	WinActivate ahk_exe HD-Player.exe
 }
 waitAndEscape(){
 	Sleep 21000
@@ -66,7 +59,7 @@ inChat() {
 }
 chatDrag(x, y){
 	if(c(1467, 118, 0xE8B4B4)){
-		quickChatDrag(1472, 177, x, y)
+		quickChatDrag(1470, 179, x, y)
 	}
 }
 iconDrag(x, y){
@@ -80,18 +73,7 @@ quickChatDrag(xfirst, yfirst, x, y){
 		shouldClickRight:=true
 	untapButtons()
 
-	MouseGetPos cx, cy
-	MouseMove %xfirst%, %yfirst%
-	Click, Down
-	Sleep 15
-	xdrag:=xfirst-25
-	MouseMove %xdrag%, %yfirst%
-	Sleep 15
-	MouseMove %x%, %y%
-	Sleep 175
-	Click, Up
-
-	MouseMove %cx%, %cy%
+	drag(xfirst, yfirst, x, y)
 
 	if(shouldClickRight)
 		Click, down, right
@@ -174,14 +156,14 @@ sell(){
 }
 quickChatStreamer(x, y){
 	click(814, 1068)
-	pixelWait(1311, 427, 0xEDF2F5)
+	pixelWait(1312, 426, 0xFBFCFD)
 	click(x, y)
 }
 
 commendEveryone(){
 	commended := false
 	;Loop 2{
-		if(c(441, 710, 0x2D5E91)){
+		if(c(448, 725, 0x7BE6FE)){
 			click(447, 718)
 			commended := true
 		}
@@ -210,41 +192,41 @@ commendEveryone(){
 }
 
 follow(){
-	if c(612, 407, 0xD98FDC) ;1
+	if c(607, 405, 0x8F57AA) || c(612, 401, 0x925BAF) ;1
 		click(496, 422)
-	if c(612, 482, 0xD58FDC) ;2
+	if c(606, 482, 0x9058AA) || c(612, 474, 0x935CB0) ;2
 		click(496, 494)
-	if c(612, 555, 0xEAA3E9) ;3
+	if c(607, 554, 0x9159AB) || c(613, 549, 0x975FB1) ;3
 		click(496, 567)
-	if c(612, 627, 0xF0A6EC) ;4
+	if c(613, 622, 0x9A5EAF) || c(613, 622, 0x9459AA) ;4
 		click(496, 639)
-	if c(612, 704, 0xE098E3) ;5
+	if c(613, 697, 0x9058A9) || c(613, 697, 0x945CAE) ;5
 		click(496, 715)
-	if c(1305, 408, 0xF9B0F2) { ;6
+	if c(1305, 408, 0xF9B0F2) || c(1306, 398, 0xA153A4) || c(1307, 400, 0xA356A8){ ;6
 		click(1421, 430)
 		Sleep 50
 		click(1472, 425)
 		Sleep 50
 	}
-	if c(1305, 482, 0xF7AEF2){ ;7
+	if c(1306, 474, 0xA153A3) || c(1306, 474, 0xA457A9){ ;7
 		click(1423, 496)
 		Sleep 100
 		click(1468, 492)
 		Sleep 100
 	}
-	if c(1305, 555, 0xF9B0F3){ ;8
+	if c(1305, 555, 0xF9B0F3) || c(1307, 548, 0xA254A3) || c(1306, 549, 0xA659A9){ ;8
 		click(1424, 569)
 		Sleep 50
 		click(1465, 570)
 		Sleep 50
 	}
-	if c(1305, 631, 0xF8B0F2) { ;9
+	if c(1305, 622, 0xA455A4) || c(1307, 623, 0xA85CAB) { ;9
 		click(1422, 644)
 		Sleep 50
 		click(1472, 646)
 		Sleep 50
 	}
-	if c(1305, 704, 0xF8AFF2) { ;10
+	if c(1305, 704, 0xF8AFF2) || c(1307, 697, 0xA658A7) || c(1306, 696, 0xA254A2) { ;10
 		click(1420, 716)
 		Sleep 100
 		click(1464, 718)
@@ -288,4 +270,29 @@ ignoreInvite(){
 }
 inMainMenu(){
 	return c(1480, 252, 0x00FF00)  && c(1449, 827, 0xEFFBFE)
+}
+openGameGuardian(){
+	waitClick(1139, 77, 0x8900C3)
+}
+
+quickChat(x, y){
+	if !allowChat() 
+		return
+	Send {F4}
+	Sleep 30
+	click(1217, 92) ;Chat
+	Sleep 25
+	click(x, y) ;Wait
+}
+quickIcon(x, y){
+	if !allowChat() 
+		return
+	Send {F4}
+	Sleep 30
+	click(1225, 150) ;Icon
+	pixelWait(1235, 156, 0x99CCE1)
+	click(x, y) ;Wait
+}
+allowChat(){
+	return c(1470, 214, 0x9CCBE1)
 }

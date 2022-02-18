@@ -1,3 +1,7 @@
+
+CoordMode, Mouse, Screen
+CoordMode, Tooltip, Screen
+CoordMode, Pixel, Screen
 /*
 // by Philippe Lhoste <PhiLho(a)GMX.net> http://Phi.Lho.free.fr
 // File/Project history:

@@ -1,4 +1,4 @@
-#Include ../___Basic.ahk
+#Include ../___Functions.ahk
 
 #IfWinActive ahk_exe studio64.exe
 
@@ -68,7 +68,7 @@ runDetekt(){
 	Send +{Esc}
 }
 autoFormat(){
-	Send !^l
+	Send !^;
 	Send !^o
 }
 closeTab(){

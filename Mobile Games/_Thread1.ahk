@@ -7,15 +7,14 @@ setmousedelay -1
 setkeydelay -1
 
 loop(){
-	if c(708, 779, 0xA0886C) ;Usable reward
-	|| c(1022, 310, 0xBCDFF7) ;With background (Reward text)
-	|| (c(1099, 370, 0xCACDD1) && c(899, 750, 0x9F866B)) ;Reward with no background
+	if c(955, 307, 0xB4D8F6) || c(945, 311, 0xB6D7EE) ;Obtain reward
 	{
 		escape()
+		Sleep 500
 	}
 }
 
 while(true)
 	loop()
 !p::ExitApp
-#Include __Functions.ahk
+#Include __Basic.ahk

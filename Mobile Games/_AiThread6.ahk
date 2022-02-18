@@ -10,7 +10,7 @@ setkeydelay -1
 global spamBuyMcEnabled:=false
 global withMc:=true
 global lineupSelected:=true
-global mcPlayRemaining:=6
+global mcPlayRemaining:=600 ;5
 global mcSurrender:=false		;Surrender part
 global minRefresh:=2
 global maxRefresh:=2
@@ -29,7 +29,7 @@ loop(){
 		}
 	}
 	;Start game
-	if(c(1328, 740, 0xFFF499)){
+	if(c(1239, 692, 0xFFD06D)){
 		if(mcPlayRemaining<=0){
 			click(495, 258)
 			pixelWait(856, 766, 0xD6A668)
@@ -63,30 +63,22 @@ loop(){
 		click(1167, 335)
 	}
 
-	;Recommend lineup showup
-	if(isColor(1462, 293, 0xEDF2F6)){
-		if(mcSurrender){
-			surrenderMc()	
-			return true
-		}
-		else{
-			click(1340, 362)
-			Sleep 500
-			click(1461, 294)
-			Sleep 500	
-			afterRecommendLineup()
-			return true
-		}
+	;Recommend line up basic show up
+	if c(1463, 302, 0xF7F9FB){
+		recommendLineup()
+		afterRecommendLineup()
 	}
 
 	;In inventory
 	if(isInInventory()){
+		tooltip("Is in inventory")
 		if(mcSurrender){
 			surrenderMc()	
 			return true
 		}
 		;Recommend lineup first time
 		else if(!lineupSelected){		
+			tooltip("Line up not selectd")
 			recommendLineup()
 			afterRecommendLineup()
 		}
@@ -94,13 +86,13 @@ loop(){
 			buyOrRefresh()
 			
 			;MC Add more slot
-			if(isColor(500, 1054, 0x4B9CC6)){
+			if(isColor(492, 1049, 0x71C461)){
 				click(486, 1012)
 			}
 
 			;Pick item from monster 
-			if(isColor(465, 198, 0xFE1021)){
-				if(isColor(506, 580, 0x33445C)){
+			if(isColor(478, 234, 0xFF1429)){
+				if(isColor(514, 591, 0x2F4861)){
 					assignItems()
 				}
 				else{
@@ -118,6 +110,11 @@ loop(){
 					assignItems()
 				}
 			}
+
+			;Pick talent synergy
+			if c(871, 686, 0x60699A){
+				click(871, 686)
+			}
 		}			
 	}
 
@@ -127,8 +124,8 @@ loop(){
 	}
 
 	;If commander in low health (564 Magictian)
-	if(isColor(541, 564, 0x73E70E)&&isColor(556, 563, 0x151712)){
-		loopSpamBuyMc()
+	if c(544, 579, 0x6EDB08) && !c(564, 578, 0x77ED10){
+	;	loopSpamBuyMc()
 		return true
 	}
 
@@ -234,10 +231,9 @@ buyOrRefresh(){
 	round:=round+1
 	
 	Loop %minRefresh% {
-		hasDeposit2:=isColor(1413, 18, 0xF5EBAA)
-
-		;Always refresh if round > 11 || Refresh when no hero bought and has deposit 2
-		if(round>11 || (!isHeroBought() && hasDeposit2)){
+		;Always refresh if round > 11 || Refresh when no hero bought or has deposit 2
+		if(round>11 || !isHeroBought() || !c(1445, 24, 0x262636)){
+			isHeroBought()
 			clickRefresh()		
 			Sleep 500
 		}
@@ -246,7 +242,7 @@ buyOrRefresh(){
 
 	;Refresh more by deposit 4
 	refresh:=0
-	if(isColor(1464, 15, 0xF4EAA8))
+	if(isColor(1480, 25, 0xF4ECA9))
 		refresh:=2
 	Loop %refresh% {
 		isHeroBought()
@@ -271,31 +267,31 @@ clickRefresh(){
 isHeroBought(){
 	buy:=false
 	;1
-	if(isColor(653, 440, 0xFFFFFF) && c(654, 438, 0xFFFFFF)){
+	if(isColorS(653, 443, 0xFFFFFF, 12)){
 		buy:=true
 		click(653, 442)
 		Sleep 300
 	}
 	;2
-	if(isColor(825, 439, 0xFFFFFF) && c(831, 443, 0xFFFFFF)){
+	if(isColorS(827, 441, 0xFFFFFF, 12)){
 		buy:=true
 		click(830, 441)
 		Sleep 300
 	}
 	;3
-	if(isColor(1001, 438, 0xFFFFFC) && c(1009, 443, 0xFFFFFF)){
+	if(isColorS(1005, 442, 0xFFFFFF, 12)){
 		buy:=true
 		click(1005, 441)
 		Sleep 300
 	}
 	;4
-	if(isColor(1181, 442, 0xFFFFFF) && c(1184, 443, 0xFFFFFF)){
+	if(isColorS(1182, 443, 0xFFFFFF, 12)){
 		buy:=true
 		click(1181, 441)
 		Sleep 300
 	}
 	;5
-	if(isColor(1357, 440, 0xFFFFFF) && c(1355, 433, 0xFFFFFF)){
+	if(isColorS(1357, 440, 0xFFFFFF, 12)){
 		buy:=true
 		click(1356, 439)
 		Sleep 300
@@ -309,7 +305,7 @@ clickDelete(){
 	click(515, 417)
 }
 isInInventory(){
-	return isColorS(1440, 1040, 0x1F5889, 8)
+	return isColorS(1423, 1030, 0x807C96, 8)
 }
 isMcInGrandMaster(){
 	return isColor(514, 367, 0x61A5A3)
@@ -318,15 +314,13 @@ isMcInElite(){
 	return isColor(509, 351, 0xADC6CE)
 }
 recommendLineup(){
-	click(461, 598)
+	click(459, 602) ;Recommend
 	Sleep 1000
-	click(475, 414)
+	click(486, 424) ;Official Line up
 	Sleep 1000
-	click(1391, 376)
+	click(1393, 370) ;Equip
 	Sleep 1000
-
-	;Close lineup
-	click(1464, 295)
+	click(1462, 302) ;Close lineup
 	Sleep 500
 
 	round:=0
@@ -370,15 +364,9 @@ deleteHero(){
 }
 surrenderMc(){
 	Sleep 285000
-	if(isColor(1462, 293, 0x7CCBFF)){
-		click(1462, 293)
-		Sleep 500
-	}
-	click(537, 13)
-	Sleep 2000
-	click(1026, 808)
-	Sleep 1000
-	click(1078, 657)
+	click(584, 28)
+	waitClick(570, 14, 0x37699B)
+	waitClick(1025, 655, 0xA68C6F)
 }
 
 buyIfExists(x, y, color){
@@ -542,4 +530,5 @@ loopSpamBuyMc(){
 while(true)
 	loop()
 !p::ExitApp
-#Include __Functions.ahk
+
+#Include __Basic.ahk

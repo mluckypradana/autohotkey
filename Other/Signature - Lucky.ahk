@@ -1,4 +1,4 @@
-#Include ../___Basic.ahk
+#Include ../___Functions.ahk
 global mouseX:=0
 global mouseY:=0
 global scale
@@ -10,14 +10,14 @@ init(){
 	MouseGetPos x, y
 	mouseX := x
 	mouseY := y
-	scale:=1.3
+	scale:=0.24
 	initX:=348*scale
 	initY:=445*scale
-	delay = 120
+	delay = 10
 }
 
 ;Draw
-!/::
+Numpad0::
 	init()
 	click Down
 	draw(346, 420)

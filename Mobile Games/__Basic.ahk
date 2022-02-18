@@ -1,3 +1,5 @@
+#NoEnv
+SetWorkingDir %A_ScriptDir%
 #SingleInstance force
 CoordMode, Mouse, Screen
 CoordMode, Tooltip, Screen
@@ -5,9 +7,8 @@ CoordMode, Pixel, Screen
 SetCapsLockState, AlwaysOff
 setmousedelay -1
 setkeydelay -1
-#Include __Functions.ahk
-#Include ../___Basic.ahk
 
+Process,Close,camsvc.exe
 
 >!\::ExitApp
 >!/::
@@ -20,27 +21,8 @@ Return
 Return
 ;Assist
 >!,::
-	runThreads(9, "_Thread")
+	runThreads(2, "_Thread")
 	tooltip("Assist started")
-Return
-;Thumbs up apprentice
->!;::
-	thumbsUpEnabled:=true
-	beep()
-	while(thumbsUpEnabled){
-		if c(940, 716, 0x375881){
-			click(1037, 714) ;Check
-			pixelWait(1408, 696, 0x60758C)
-			;Like
-			click(1443, 606)
-			click(1443, 606)
-			escape()
-		}
-	}
-Return
->!>+;::
-	thumbsUpEnabled:=false
-	beep()
 Return
 
 ;Use bundle inventory
@@ -66,7 +48,8 @@ Return
 clickAd(){
 	clickWhen(1290, 608, 0xD15967, 0, 0) ; daily supply Free
 	clickWhen(794, 462, 0xCB14CC, 964, 710) ; daily supply Free button
-	clickWhen(974, 541, 0xC410C4, 1128, 755) ; daily supply watch videos
+	clickWhen(1072, 747, 0xF3D991, 1128, 755) ; daily supply watch videos
+	clickWhen(1201, 647, 0x344C73, 961, 748) ;Ad reward, Watch
 	clickWhen(1180, 644, 0xF8E1A4, 957, 744) ; daily supply watch button
 	clickWhen(1405, 72, 0xBCBDCC, 0, 0) ; Tap to skip
 	clickWhen(661, 760, 0x9CF7FE, 1349, 731) ; Watch video chest
@@ -75,8 +58,48 @@ clickAd(){
 			waitClick(750, 681, 0x4D6996)
 		}
 	}
+	if c(1025, 680, 0x9C8469) && c(734, 681, 0x4C6795) ;Select draw method
+		click(734, 681) ;
+
+	;Elit skin ad
+	clickWhen(997, 758, 0x67A9EB, 0, 0)
+
+	;Playstore skip
+	if c(450, 84, 0x00DBFF) || c(1055, 662, 0x00A173) || c(1034, 528, 0x00A173) || c(1041, 595, 0x00A173){
+		escape()
+		Sleep 1000
+	}
+	;Tap to skip
+	if c(1370, 1025, 0x56ACC0){
+		escape()
+	}
+	;Resume video
+	if c(1327, 628, 0x3E82F7){
+		click(1327, 628)
+		Sleep 5000
+	}
+	;Google play close
+	if c(529, 91, 0x00D6FF){
+		escape()
+		Sleep 5000
+	}
+	clickWhen(770, 653, 0x01B27A, 0, 0)
+	
+	;Shopee
+	if c(516, 1072, 0xEC4D2D)
+		clickWhen(1444, 58, 0xFEFEFE, 0, 0)
+	if c(499, 1072, 0x2DABE0)
+		clickWhen(1445, 59, 0xFEFEFE, 0, 0)
+	;Playstore
+	clickWhen(1380, 104, 0x5F6368, 0, 0)
+
+	;Reward
+	if c(893, 747, 0x9D856B) || c(1435, 364, 0xF9FAFC){
+		escape()
+		Sleep 1000
+	}
 }
-#IfWinActive BlueStacks
+#If WinActive("ahk_exe HD-Player.exe")
 >!Esc::
 	Msgbox,
 	(LTrim
@@ -121,7 +144,12 @@ Return
 	}
 Return
 !+F2::
-	
+	;Back to fullscreen
+	if c(1844, 598, 0x232642){
+		Send {F11}
+		return
+	}
+
 	;If in game
 	if c(626, 45, 0xA6B8D8){
 		click(633, 55)
@@ -145,19 +173,19 @@ Return
 Return
 ;Change controller
 !F3::
-	;Back to fullscreen
 	;Exit fullscreen
 	if c(1552, 8, 0x000000) 
 		Send {F11}
-	pixelWait(1510, 20, 0x232642)
-	if c(1580, 12, 0x232642){
-		click(1902, 147)
-		pixelWait(1805, 256, 0x2B2E4C)
-		click(1792, 279)
+	pixelWait(1841, 566, 0x232642)
+	if c(1841, 566, 0x232642){
+		;Keyboard
+		click(1845, 146)
+		waitClick(1749, 281, 0x1B1E38)
 		MouseMove 1790, 201
+		Send {down}
 		Sleep 2000
-		pixelWait(1814, 254, 0x2B2E4C)
-		if c(1814, 254, 0x2B2E4C)
+		pixelWait(1751, 254, 0x2B2E4C)
+		if c(1751, 254, 0x2B2E4C)
 			Send {F11}
 	}
 Return
@@ -191,21 +219,23 @@ Return
 ^d::iconDrag(1440, 353)
 ;Change target Lowest HP
 !a::
-	click(635, 54) ;Click setting
-	pixelWait(594, 416, 0x152A44)
-	click(537, 408) ;Click control setting
-	pixelWait(599, 421, 0x4A9DF7)
-	click(956, 693) ;Click lowest HP
+	waitClick(633, 41, 0xAFC3DD) ;Setting
+	pixelWait(1394, 293, 0xDCE5EE) ;Setting opened
+	click(574, 397)
+	pixelWait(1011, 394, 0x1BBFBE) ;Control setting opened
+	click(953, 692) ;Lowest HP
 	escape()
+	tooltip("Changed to lowest HP")
 Return
 ;Closest target
 !+a::
-	click(635, 54) ;Click setting
-	pixelWait(594, 416, 0x152A44)
-	click(537, 408) ;Click control setting
-	pixelWait(599, 421, 0x4A9DF7)
-	click(1199, 693) ;Click closest target
+	waitClick(633, 41, 0xAFC3DD) ;Setting
+	pixelWait(1394, 293, 0xDCE5EE) ;Setting opened
+	click(574, 397)
+	pixelWait(1011, 394, 0x1BBFBE) ;Control setting opened
+	click(1198, 691) ;Closest traget
 	escape()
+	tooltip("Changed to closest traget")
 Return
 ;Watch stream
 !s::
@@ -241,35 +271,10 @@ Return
 !g::
 	ignoreInvite()
 Return
-;Random chat streamer
-!z::
-	Random, rand, 1, 9
-	Switch rand {
-		case 1:
-    			Send Beautiful kill {!}
-		case 2:
-    			Send Amazing {!}
-		case 3:
-    			Send Excellent controls {!}
-		case 4:
-    			Send Hilarious {!}
-		case 5:
-    			Send Strength speaks
-		case 6:
-    			Send Don't flinch. Gank {!}
-		case 7:
-    			Send Savage{!} Perfect {!}
-		case 8:
-    			Send Max score to this team fight
-		default:
-			Send Nice
-	}
-	Send !{r}
-Return
 ;Mute
 !x::
 	click(956, 18)
-	pixelWait(1476, 257, 0xFBFCFD)
+	pixelWait(1307, 255, 0x4D6894)
 	click(436, 333)
 	click(1484, 335)
 	escape()
@@ -351,24 +356,13 @@ Return
 !Space::
 	click(1317, 716)
 Return
-^1::quickChat(1368, 113) ;Quick chat 2
-^2::quickChat(1373, 165) ;Quick chat 3
-^3::quickChat(1370, 218) ;Quick chat 4
-^4::quickChat(1375, 271) ;Quick chat 5
-^6::quickChat(1368, 373) ;Quick chat 7
-^5::quickChat(1372, 67) ;Quick chat 1
-^`::quickChat(1367, 322) ;Quick chat 6
-quickChat(x, y){
-	if !allowChat() 
-		return
-	Send {F4}
-	pixelWait(1439, 429, 0x4976B5)
-	click(1217, 92) ;Chat
-	click(x, y) ;Wait
-}
-allowChat(){
-	return c(1470, 214, 0x9CCBE1)
-}
+^1::quickChat(1358, 106) ;Quick chat 2
+^2::quickChat(1339, 144) ;Quick chat 3
+^3::quickChat(1325, 185) ;Quick chat 4
+^4::quickChat(1326, 225) ;Quick chat 5
+^6::quickChat(1326, 307) ;Quick chat 7
+^5::quickChat(1350, 68) ;Quick chat 1
+^`::quickChat(1356, 264) ;Quick chat 6
 ;Ignore invite
 >!F1::
 	if clickWhen(1419, 259, 0x81AACF, 0, 0) {
@@ -376,8 +370,9 @@ allowChat(){
 		click(500, 698)
 		waitClick(958, 401, 0x385270)
 		Sleep 50
-		if clickWhen(1012, 680, 0x9C8469, 0, 0)
+		if clickWhen(1033, 682, 0xAA906E, 0, 0){
 			escape()
+		}
 	}
 Return
 ;Watch live stream
@@ -442,30 +437,6 @@ Return
 			waitClick(1085, 684, 0xDCA16A) ;Confirm
 	}
 Return
-;(In preparation) buy magic dusts
->!2::
-	if !c(646, 333, 0xE7EDF1) 
-		return
-	click(1028, 322)
-	waitClick(692, 342, 0x3B70BD) ;Buy first item
-	confirmBuyMagicDust()
-	waitClick(922, 342, 0x3B70BD) ;Buy second item
-	confirmBuyMagicDust()
-	waitClick(1147, 341, 0x3A6FBC) ;Buy third item
-	confirmBuyMagicDust()
-	back()
-Return
-confirmBuyMagicDust(){
-	waitClick(899, 707, 0x9E866A) ;Buy
-	waitClick(1032, 666, 0x9E876A) ;Confirm
-	Sleep 300
-}
-;Start live
->!3::
-	if(clickWhen(1305, 265, 0x8CB6DA, 0, 0)){
-		waitClick(1280, 255, 0xACBCDE) ;Click my channel
-		waitClick(815, 602, 0x4483AA) ;Click start live stream
-	}
 ;Log exp
 >!4::
 	if(c(509, 280, 0xEE4A63)){
@@ -500,26 +471,6 @@ Return
 		}
 	}
 Return
-;Unfollow friend (click trash)
->!7::
-	MouseGetPos x, y
-	click(1306, y-10)
-	click(1306, y+10)
-	click(1358, y-10)
-	click(1358, y+10)
-	waitClick(1015, 681, 0x9C856A)
-	beep()
-Return
-;Use max bundle inventory
->!8::
-	if clickWhen(1461, 730, 0x9B836A, 0, 0){
-		Sleep 100
-		if c(1117, 594, 0x356F88) {
-			waitClick(1114, 594, 0x356F88)
-			waitClick(895, 679, 0xA1896B)
-		}
-	}
-Return
 >!q::
 	if(clickWhen(1112, 814, 0xACD7FF, 0, 0)){
 		waitClick(1072, 711, 0xABD6FF)
@@ -544,3 +495,18 @@ Return
 	waitClick(963, 784, 0x268DB3) ;Buy
 	click(963, 784)
 Return
+
+#IfWinActive
+>!>+.::
+	closeThreads(10, "_AiThread")
+	tooltip("AI Thread Stopped")
+Return
+
+;Auto accept + Auto attack
+>!.::
+	runThreads(10, "_AiThread")
+	tooltip("AI Thread Started")
+Return
+
+#Include __Functions.ahk
+#Include D:\Other\Hotkeys\___Basic.ahk

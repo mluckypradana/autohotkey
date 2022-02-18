@@ -1,11 +1,5 @@
 ;AI Base
 #SingleInstance force
-CoordMode, Mouse, Screen
-CoordMode, Tooltip, Screen
-CoordMode, Pixel, Screen
-SetCapsLockState, AlwaysOff
-setmousedelay -1
-setkeydelay -1
 
 global brawlMatch:=false ;Means its AI
 global memberDeleted:=false
@@ -18,13 +12,26 @@ global withDeleteMember:= true
 global withAutoShutdown:= true
 
 isFullMember(){
-	return c(1454, 816, 0x8AA1D0)
+	return c(1454, 816, 0x8AA1D0) || c(1272, 757, 0x233A56)
 }
 loop(){
 	;Back to lobby
 	if(isColor(999, 729, 0x4873D2) && isColor(922, 241, 0x74A8B4)){
 		click(999, 729)
 		Return
+	}
+	
+	;Back from download arcade game
+	if c(611, 802, 0x57636C) && c(474, 255, 0x95B0E7) {
+		forceBack()
+		tooltip("Back from download arcade game")
+		return true
+	}
+
+	;Find match when internet connection is bad
+	if c(765, 749, 0x2E2720) && c(736, 682, 0x4C6895) && c(1016, 680, 0x9C856A) {
+		click(1016, 680)
+		return true
 	}
 
 	;Close dialog invite 
@@ -33,10 +40,22 @@ loop(){
 		return
 	}
 
+	;Penalty
+	if c(883, 685, 0xA2896D) {
+		escape()
+		Return
+	}
+
+	;Accept Game, Enter
+	If c(832, 510, 0xBFB58E) || c(798, 514, 0x91A3A7) {
+		click(861, 751)
+		Return
+	}
+
 	;If on main menu and not finding match
-	if c(914, 255, 0x53B2D9) && c(1121, 260, 0x4165F9) {
-		if withAutoShutdown && getCurrentHour() == 5 {
-			runCommand("shutdown /s /f")
+	if c(1025, 265, 0xD4C76A) {
+		if withAutoShutdown && A_Hour == 5 {
+			runCommand("rundll32.exe powrprof.dll, SetSuspendState Sleep")
 			return
 		}
 
@@ -52,16 +71,16 @@ loop(){
 				click(1317, 492)
 			}
 		}else
-			click(959, 550)
+			click(1239, 406)
 		Return
 	}
 
 	;Click group setting
-	if clickWhen(443, 357, 0x789CB9, 0, 0)
+	if clickWhen(739, 813, 0x213552, 438, 360)
 		return
 
 	;If is in group members (close button & trash button)
-	if c(1442, 272, 0xF4F7FA) && c(1443, 419, 0x9DACD3) {
+	if c(532, 279, 0xD44050) {
 		if(memberDeleted){
 			escape()
 			pixelWait(882, 811, 0x4874B3)
@@ -112,10 +131,17 @@ loop(){
 		Return
 	}
 
-	;[Done] If in vs AI mode, click(brawl
-	if(clickWhen(644, 342, 0x96E0E9, 824, 504)){
-		waitClick(773, 513, 0x356EAE)
+	;[Done] If in vs AI mode, click classic
+	if c(656, 566, 0xFAD15D){
+		click(772, 513)
+		waitClick(772, 514, 0x356EAE)
 		Return
+	}
+
+	;If confirm hero in brawl
+	if c(954, 782, 0x9B8369){
+		click(954, 782)
+		return
 	}
 
 	;[Done] In picker
@@ -128,14 +154,15 @@ loop(){
 		Return
 
 	;Network connection failed
-	if(isColor(896, 397, 0x7A8EB6)&&isColor(1160, 665, 0xAC845D)){
-		click(1082, 652)
+	if c(752, 684, 0x4E6B9A) && c(1027, 684, 0xA78D6D){ ;
+		click(1030, 679) ;Okay
 		Return
 	}
 	
 	;[Done] Start game
 	if c(769, 745, 0xA08968) {	
 		if(withGroupInvite){
+			click(741, 378)
 			if(withSquadInvite)
 				waitClick(1288, 704, 0x7CADD6)
 			click(1471, 707) ;Click group invite
@@ -158,10 +185,6 @@ loop(){
 			click(1051, 767)
 		Return
 	}
-
-	;[Done] Accept  (Enter)
-	If clickWhen(863, 743, 0x9A8673, 0, 0)
-		Return
 
 	;[Done] Accept Game Ramadhan
 	PixelGetColor, color, 801, 432, RGB
@@ -186,7 +209,8 @@ loop(){
 	}
 
 	;AFK when start game
-	if(clickWhen(909, 646, 0xB2885F, 909, 646)){
+	if c(457, 668, 0xB5394A) && c(462, 659, 0xFDECEC){
+		escape()
 		Return
 	}
 	;Violation Notice
@@ -215,6 +239,12 @@ loop(){
 	if(clickWhen(753, 536, 0x661110, 0, 0))
 		Return
 
+	;Continue victory, exp, graph, performance
+	if c(1459, 796, 0x9F876B){
+		click(1459, 796)
+		return true
+	}
+
 	;[Done] Return summary graph
 	If c(1285, 806, 0xA0876B) {
 		click(1359, 802)
@@ -224,6 +254,12 @@ loop(){
 	;[Done] Return Achievement
 	If c(1334, 809, 0x9F876B) {
 		click(1406, 809)
+		return true
+	}
+
+	;Continue Achievement
+	if c(1465, 746, 0xA2896B) {
+		click(1465, 746)
 		return true
 	}
 
@@ -241,9 +277,8 @@ loop(){
 	}
 
 	;Credit celestial level
-	PixelGetColor, color, 959, 814, RGB
-	If (equal(color,0xDAA069)<4){
-		click(959, 814)
+	if c(882, 804, 0xA48B6F){
+		click(882, 804)
 		Return
 	}
 
@@ -308,11 +343,21 @@ loop(){
 		Return
 	}
 
-	;Rate
+	;Close Rate dialog
 	PixelGetColor, color, 967, 421, RGB
+	if(c(1093, 453, 0xF2F5F8) && c(852, 678, 0x182433)){ ;Close button and rate button
+		escape()
+		return
+	}
 	If (equal(color,0xF5DCED)<4){
 		clickWhen(738, 681, 0x4C6793, 0, 0)
 		Return
+	}
+
+	;Back from starlight
+	if c(445, 265, 0xEAE1C1) && c(550, 750, 0xD8AF6D) {
+		click(445, 265)
+		return
 	}
 
 	;Close cancel matchmaking dialog
@@ -322,7 +367,7 @@ loop(){
 	}
 
 	;Close all kind of dialog
-	if c(1464, 275, 0x011509) {
+	if c(1464, 275, 0x011509) || c(1466, 270, 0x01130B) {
 		escape()
 		tooltip("Close all kind of dialog")
 	}
@@ -339,9 +384,26 @@ loop(){
 		return true
 	}
 
+	;Close national arena contest
+	if c(1021, 328, 0x5E83B8) && c(479, 255, 0x8BA2D4){
+		click(473, 255)
+	}
+
+	;Close webview dialog
+	if c(1349, 815, 0xAAAAAA){
+		click(1349, 815)
+		return true
+	}
+
 	;Back from arcade game
 	if c(1419, 261, 0xA4B5D7) && c(969, 332, 0x77CAFE) {
 		back()
+		return true
+	}
+
+	;Close exit dialog
+	if c(1060, 741, 0x875469) {
+		escape()
 		return true
 	}
 }
@@ -352,33 +414,33 @@ followAndRemoveMember(){
 	followMembers()
 	;removeMember(1441, 745)
 	;removeMember(1444, 670)
-	;removeMember(1445, 616)
+	removeMember(1445, 616)
 	removeMember(1444, 554)
 	removeMember(1445, 489)
 	removeMember(1443, 430)
 }
-
 followMembers(){
 	;1
-	if c(627, 447, 0xECA4E8)
+	if c(627, 447, 0xECA4E8) || c(627, 439, 0x8E4D97)
 		followMember(406)
 	;2
-	if c(627, 509, 0xE99EE5)
+	if c(621, 509, 0x8C4B91) || c(627, 501, 0x8F4D97) || c(627, 510, 0xEDA2E9)
 		followMember(470)
 	;3
-	if c(627, 572, 0xE69BE1)
+	if c(621, 571, 0x8F4A90) || c(620, 571, 0x924D95) || c(627, 572, 0xF5ACF0) || c(626, 564, 0x9A5499)
 		followMember(537)
 	;4
-	if c(626, 634, 0xF8AFF3)
+	if c(627, 627, 0x8A4C94) || c(627, 628, 0x944E90) || c(627, 628, 0x8F4D97) || c(634, 634, 0x974E91) || c(627, 636, 0xEFA4EA)
 		followMember(597)
 	;5
-	if c(627, 698, 0xE69EE2) || c(627, 698, 0xE9A1E6)
+	if c(621, 697, 0x9F579E) || c(627, 690, 0x8E4D97) || c(633, 698, 0xA0599A) || c(627, 698, 0xF5ACF0)
 		followMember(660)
 	;6
-	if c(627, 761, 0xE396DE)
+	if c(620, 760, 0x9E58A0) || c(627, 753, 0xA35DA0) || c(627, 761, 0xF6ACF1)
 		followMember(720)
 	Sleep 200
 }
+
 followMember(y){
 	click(611, y)
 	sleep 800

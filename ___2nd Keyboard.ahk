@@ -509,7 +509,7 @@ Return
 ;=========================WhatsApp=========================
 #if (getKeyState("F23", "P")) and if WinActive("ahk_exe WhatsApp.exe")
 F23::return
-#Include D:\Other\Hotkeys\Mobile Games\__Functions.ahk
+#Include C:\Storage\Other\Hotkeys\Mobile Games\__Functions.ahk
 
 home::
 	SetTimer, WinMoveMsgBox, 50

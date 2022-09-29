@@ -16,7 +16,6 @@ global detectorX:=0
 global detectorY:=0
 global detectorColor:=0x000000
 global shakeMouseEnabled:=false
-global lastWindowId:=0
 global currentDisplay:=1
 global currentDesktop:=1
 !Esc::
@@ -29,6 +28,10 @@ Pause::
 	tooltip("Shutting down")
 	runCommand("shutdown /s /f")
 Return
+Capslock & q::LButton
+Capslock & w::RButton
+Capslock & e::Click WheelUp
+Capslock & d::Click WheelDown
 ;Hide cursor
 ScrollLock::
 	runCommand("sc config ""Capability Access Manager Service"" start=disabled")
@@ -85,23 +88,15 @@ Capslock & F3::
 	nextDesktop()
 	currentDesktop:=3
 Return
-Capslock & e::
-	Send {Volume_up}
-Return
-Capslock & r::
-	copy() 
-	Process, Close, nircmd.exe
-	runCommand("nircmd speak text ~$clipboard$ 3")
-Return
+Capslock & r::Volume_up
+Capslock & f::Volume_down
+
 copy(){
 	Send,^c
 	Send,^c
 	tooltip(clipboard)
 	ClipWait
 }
-Capslock & d::
-	Send {Volume_down}
-Return
 ;Toggle main display
 Capslock & y::
 	currentDisplay := currentDisplay == 1 ? 2 : 1
@@ -121,16 +116,6 @@ Capslock & s::
 	runCommand("nircmd setdefaultsounddevice ""VoiceMeeter Output""{ENTER}nircmd setdefaultsounddevice ""VoiceMeeter Input"" 1")
 Return
 ;Headset mode
-Capslock & q::
-	untapButtons()
-	runCommand("nircmd setdefaultsounddevice ""Headset""{ENTER}nircmd setdefaultsounddevice ""Headset Mic"" 1{ENTER}nircmd setdefaultsounddevice ""Headphone""")
-	SoundSet, 20
-Return
-;Amplifier mode
-Capslock & w::
-	untapButtons()
-	runCommand("nircmd setdefaultsounddevice ""PC""{ENTER}nircmd setdefaultsounddevice ""PC In"" 1")
-Return
 Capslock & Up::moveMouse(0, -1)
 Capslock & Down::moveMouse(0, 1)
 Capslock & Left::moveMouse(-1, 0)
@@ -228,7 +213,10 @@ Return
 :*?:w2::wkwk
 :*?:w3::wkwkw
 :*?:ap2::apa-apa
+:*?:/==::==================================
+!`::Send 241112
 ;Mouse function on 
 ;=========================
-#Include D:\Other\Hotkeys\___Functions.ahk
-#Include D:\Other\Hotkeys\___2nd Keyboard.ahk
+#Include ___Functions.ahk
+#Include __Emojis.ahk
+;#Include C:\Storage\Other\Hotkeys\___2nd Keyboard.ahk

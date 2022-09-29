@@ -1,6 +1,18 @@
-#Include ../___Functions.ahk
+#Include ../___Basic.ahk
 
-#IfWinActive ahk_exe studio64.exe
+
+Capslock & 1::	
+	Send, {ALTDOWN}{TAB}{ALTUP}
+	Sleep 500
+	Send {Space}
+Return
+
+Capslock & 2::
+	Send {Space}	
+	Send, {ALTDOWN}{TAB}{ALTUP}
+Return
+
+;#IfWinActive ahk_exe studio64.exe
 
 #!l::
 	FileRead, Clipboard, _LinearLayout.txt

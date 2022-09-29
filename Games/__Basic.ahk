@@ -509,4 +509,4 @@ Return
 Return
 
 #Include __Functions.ahk
-#Include D:\Other\Hotkeys\___Basic.ahk
+#Include C:\Storage\Other\Hotkeys\___Basic.ahk

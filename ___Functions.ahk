@@ -9,6 +9,7 @@ setmousedelay -1
 setkeydelay -1
 global lastX:=0
 global lastY:=0
+global lastWindowId:=0
 
 equal( c1, c2 ) { ; function by [VxE], return value range = [0, 441.67295593006372]
 ; that just means that any two colors will have a distance less than 442
@@ -26,7 +27,7 @@ clickL(cx, cy){
 
 focusLastWindow(){
 	if(lastWindowId!=0){
-		WinGet, PID, PID, A
+		WinGet, PID, PID, A	
 		if(PID!=lastWindowId)
 			WinActivate, ahk_pid %lastWindowId%
 	}
@@ -155,8 +156,14 @@ drag(sx, sy, dx, dy){
 	loadLastCursor()
 }
 untapButtons(){
-	Send {LShift Up}{LCtrl Up}{LAlt Up}{LWin up}
-	Send {RAlt Up}{LWin Up}{RCtrl Up}{RShift Up}
+	Send {LShift Up}
+	Send {LCtrl Up}
+	Send {LAlt Up}
+	Send {LWin up}
+	Send {RAlt Up}
+	Send {LWin Up}
+	Send {RCtrl Up}
+	Send {RShift Up}
 	untapMouse()
 }
 untapMouse(){

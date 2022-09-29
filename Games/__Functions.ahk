@@ -1,4 +1,4 @@
-#Include D:\Other\Hotkeys\___Functions.ahk
+#Include C:\Storage\Other\Hotkeys\___Functions.ahk
 
 back(){
 	waitClick(463, 248, 0xFFE1AE)

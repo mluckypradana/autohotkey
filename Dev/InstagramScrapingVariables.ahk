@@ -1,0 +1,65 @@
+global queries := "pabrik karawang, pabrik cikampek"
+global currentQuery := ""
+global phoneRegex:="(:?\+[Il]* ?)?[\d()–-][\d ()\-""–OОli_|]{6,20}[\dOОli|]\d"
+; global linkRegex:="(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-&?=%.]+"
+;global linkRegex:="\b((?:https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:, .;]*[-a-zA-Z0-9+&@#/%=~_|])"
+;global linkRegex:="(?:(?:https?|ftp):\/\/)?[-a-zA-Z0-9+&@#/%?=~_!:.;]+\.[-a-zA-Z0-9+&@#/%?=~_!:.;]+"
+global linkRegex:="(?:(?:https?|ftp):\/\/)?[-a-zA-Z0-9+&@#/%?=~_!:.;]+\.[-a-zA-Z0-9+&@#/%?=~_!:.;]+"
+
+global textX:=762
+global textY:=143
+global textEndY:=1027
+global itemGapY:=82
+global thumbX:=710
+global maxFailDetect:=30
+global colors:=[]
+global maxResultTotal:=10
+global copiedList:=[]
+global usernames:=[]
+global duplicateUsername:=0
+global maxDuplicateUsername:=10
+global vExplorer:=[835, 1057]
+global vSearchBar:=[1069, 56, 0xEFEFEF]
+global vKeyboard:=[961, 1063, 0xECEFF1]
+global vSearchKeyboard:=[1222, 1025]
+global vTabTop:=[708, 111, 0x212121]
+global vTabAccounts:=[836, 116, 0xC2C2C2]
+global vFirstThumbnailEmpty:=[711, 155, 0xFFFFFF]
+global vFirstAccount:=[711, 155, 0xFFFFFF]
+global vMoreMenu:=[1227, 59, 0x515151]
+global vFollowers:=[1227, 59, 0xFFFFFF]
+global aStatFollowStart:=[662, 95]
+global aStatFollowEnd:=[1252, 139]
+global xThumb:=707
+global aStatStart:=[810, 118]
+global aStatEnd:=[1237, 173]
+global vFollowing:=[1016, 165]
+global vOcr:=[956, 12, 0x999999]
+global aDescStart:=[669, 197]
+global aDescEnd:=[1239, 361]
+global aDescSearchEnd:=[722, 575]
+global vSeparatorInfo:=[1028, 329]
+global xFollowIdentifier:=903
+global xContact:=1127
+global yContactRelativeButton:=5
+global vBgDialog:=[956, 5, 0x7F7F7F]
+global aContactStart:=[663, 882]
+global aContactEnd:=[1078, 1079]
+global ySecondRowContact:=59
+global xSecondRowContact:=1114
+global hDescMin:=20
+global vPosts:=[873, 162, 0x565656]
+global aNameStart:=[718, 41]
+global aNameEnd:=[1149, 81]
+global vBottomList:=[768, 1028]
+global vTopList:=[761, 120]
+global aEmailStart:=[751, 177]
+global aEmailEnd:=[1040, 211]
+global vBack:=[683, 63]
+global vMore:=[1187, 291]
+global vGmailIcon:=[958, 301, 0xEA4335]
+global lastItemThumbColor:=0xFFFFFF
+global vMoreMenuPan:=[958, 631, 0xE7E7E7]
+global vCopyProfile:=[799, 929, 0x444444]
+global vCopyUserProfile:=[782, 881]
+global vLinkCopied:=[941, 529, 0x313131]

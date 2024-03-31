@@ -1,4 +1,4 @@
-#Include ../___Basic.ahk
+;#Include ../___Basic.ahk
 global mouseX:=0
 global mouseY:=0
 global scale

@@ -79,10 +79,6 @@ runDetekt(){
 	Sleep 100
 	Send +{Esc}
 }
-autoFormat(){
-	Send !^;
-	Send !^o
-}
 closeTab(){
 	autoFormat()
 	Send ^{F4}

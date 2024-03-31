@@ -1,19 +1,21 @@
 ﻿#NoEnv
+#SingleInstance force
 SetWinDelay 0
 Coordmode Mouse, Screen
 Selecting := False
 
 Locked  := False
 Visible := True         ;<= determine start-up behaviour
+global color := 0xFFFFFF
 
 ; use VirtualScreen here to support multiple monitors
 ; Maybe here is where I need to plant that other code? =============>>>>
 
 xl=10         ;left screenpixel of horizontal crosshair
-xr=1920       ;right
+xr=1550       ;right
 
 yt=10         ;upper screenpixel of vertical crosshair
-yb=1080       ;lower screenpixel
+yb=960       ;lower screenpixel
 
 m1w:=xr-xl
 m1h:=yb-yt
@@ -30,6 +32,14 @@ if (Visible == False) {
 Return
 
 ; === Toggle display of crosshairs
++F3::
+	if(color == 0xFFFFFF)
+		color := 0xFF0000
+	else
+		color := 0xFFFFFF
+	ID1 := Box(2,1,m1h)
+	ID2 := Box(3,m1w,1)
+Return
 F3::
 if (Visible == True) {
     WinHide ahk_id %ID1%,,
@@ -56,7 +66,7 @@ return
 
 Box(n,wide,high)
    {
-      Gui %n%:Color, FF0000, 0                  ; Red
+      Gui %n%:Color, %color%, 0                  ; Red
       Gui %n%:-Caption +ToolWindow +E0x20 ; No title bar, No taskbar button, Transparent for clicks
       Gui %n%: Show, Center W%wide% H%high%      ; Show it
       WinGet ID, ID, A                    ; ...with HWND/handle ID

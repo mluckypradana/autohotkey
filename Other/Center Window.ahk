@@ -1,4 +1,4 @@
-#Include ../___Basic.ahk
+#Include ___Basic.ahk
 #/::
 	WinGetTitle, Title, A
 	CenterWindow(Title)

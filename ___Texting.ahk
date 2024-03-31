@@ -1,10 +1,8 @@
 ;1
 :*?:km ::kamu{Space}
-:*?:hn::hun
 ::y::you
 ::g::gak
 ::yg::yang
-::hy::hunny
 ::kl::kalo
 ::jg::juga
 ::ud::udah
@@ -45,7 +43,6 @@
 
 ;2
 ::akg::aku gak
-::hnk::hun aku
 ::ise::I see
 ::ty::thank you
 ::hri::hari ini
@@ -57,26 +54,21 @@
 ::akjg::aku juga
 ::idt::I don't
 ::gn::good night
-::yhn::Iya hun
 ::dsmp::udah sampe
 ::kg::kamu gak
 
 ;3
 ::ily::I love you
 ::akds::aku udah sampe
-::hnad::hunny aku udah
 ::tyf::Thank you for
-::gnl::Good night love
 ::hay::how are you
 ::hay?::how are you?
 ::hdy::how do you
 ::gdy::gak ada yang
 ::dyf::do you feel
-::tyhn::thank you hun
 ::int::I need to
 ::imy::I miss you
 ::akgbs::aku gak bisa
-::lyhn::love you hun
 ::hiak::hari ini aku
 ::kdmk::kamu udah makan
 ::mrk::mereka
